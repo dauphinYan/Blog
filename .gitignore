@@ -17,6 +17,8 @@ Thumbs.db
 # Node
 node_modules/
 npm-debug.log*
+.astro/
+dist/
 
 # Logs
 *.log

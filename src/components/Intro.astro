@@ -1,0 +1,58 @@
+---
+import { profile } from '@/content/profile';
+---
+
+<section id="intro" class="section intro-section">
+  <div class="container">
+    <div class="intro-block animate-fade-up">
+      <div class="intro-label">自述</div>
+      <div class="intro-body">
+        <p class="intro-lead">{profile.abstract}</p>
+      </div>
+    </div>
+
+    <div class="intro-block animate-fade-up">
+      <div class="intro-label">经历</div>
+      <div class="intro-body numbered-lines">
+        {profile.experiences.map((item, index) => (
+          <div class="numbered-line">
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            <p>{item}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="intro-block animate-fade-up">
+      <div class="intro-label">正在做</div>
+      <div class="intro-body status-lines">
+        {profile.current.map((item) => (
+          <p>
+            <span>{item.label}</span>
+            {item.text}
+          </p>
+        ))}
+      </div>
+    </div>
+
+    <div class="intro-block animate-fade-up">
+      <div class="intro-label">爱好</div>
+      <div class="intro-body hobby-lines">
+        {profile.hobbies.map((item) => (
+          <div>
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="intro-block dream-block animate-fade-up">
+      <div class="intro-label">梦想</div>
+      <div class="intro-body">
+        <blockquote>{profile.dream.quote}</blockquote>
+        <p>{profile.dream.text}</p>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,17 @@
+---
+import { profile } from '@/content/profile';
+---
+
+<section id="contact" class="section contact-section">
+  <div class="container">
+    <div class="contact-inner animate-fade-up">
+      <p class="caption-uppercase">联系</p>
+      <h2 class="display-lg">{profile.contactTitle}</h2>
+      <div class="contact-links">
+        <a href={profile.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href={profile.links.bilibili} target="_blank" rel="noopener noreferrer">Bilibili</a>
+        <a href={`mailto:${profile.links.email}`}>Email</a>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,28 @@
+---
+import { profile } from '@/content/profile';
+---
+
+<section id="welcome" class="section hero-band immersive-hero">
+  <div class="container hero-content">
+    <div class="hero-text animate-fade-up">
+      <h1 class="display-xl">{profile.title}</h1>
+      <p class="hero-subtitle">{profile.tagline}</p>
+      <div class="hero-links">
+        <a href={profile.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+        <span>·</span>
+        <a href={profile.links.bilibili} target="_blank" rel="noopener noreferrer">Bilibili</a>
+        <span>·</span>
+        <a href={`mailto:${profile.links.email}`}>Email</a>
+      </div>
+    </div>
+
+    <div class="hero-status animate-fade-up delay-1">
+      {profile.heroStatus.map((item) => (
+        <p>
+          <span>{item.label}</span>
+          {item.text}
+        </p>
+      ))}
+    </div>
+  </div>
+</section>

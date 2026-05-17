@@ -1,0 +1,19 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Nav from '@/components/Nav.astro';
+import Hero from '@/components/Hero.astro';
+import Intro from '@/components/Intro.astro';
+import Contact from '@/components/Contact.astro';
+import Footer from '@/components/Footer.astro';
+import { profile } from '@/content/profile';
+---
+
+<BaseLayout title={`个人主页 - ${profile.name}`} description={profile.abstract}>
+  <Nav />
+  <main>
+    <Hero />
+    <Intro />
+    <Contact />
+  </main>
+  <Footer />
+</BaseLayout>
