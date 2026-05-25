@@ -36,6 +36,9 @@ jobs:
         run: npm ci
 
       - name: Build site
+        env:
+          SITE_URL: https://dolphindream.cn
+          BASE_PATH: /
         run: npm run build
 
       - name: Configure GitHub Pages

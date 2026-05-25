@@ -2,8 +2,9 @@ import { defineConfig } from 'astro/config';
 
 const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1];
 const isUserPage = repoName?.endsWith('.github.io');
+const site = process.env.SITE_URL ?? 'https://dolphindream.cn';
 
 export default defineConfig({
-  site: process.env.SITE_URL ?? 'https://dauphinYan.github.io',
-  base: process.env.BASE_PATH ?? (repoName && !isUserPage ? `/${repoName}` : '/'),
+  site,
+  base: process.env.BASE_PATH ?? (site === 'https://dolphindream.cn' ? '/' : repoName && !isUserPage ? `/${repoName}` : '/'),
 });
