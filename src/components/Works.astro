@@ -1,0 +1,25 @@
+---
+import { profile } from '@/content/profile';
+---
+
+<section id="works" class="section">
+  <div class="container">
+    <div class="works-section animate-fade-up">
+      <div class="works-label">
+        <span class="caption-uppercase">作品</span>
+      </div>
+      <div class="works-content">
+        {profile.works.map((item, index) => (
+          <div class="work-item">
+            <div class="work-number">{String(index + 1).padStart(2, '0')}</div>
+            <div class="work-detail">
+              <h3 class="work-title">{item.title}</h3>
+              <p class="work-text">{item.text}</p>
+              {item.link && <a href={item.link} target="_blank" rel="noopener noreferrer" class="work-link">{item.linkText || '前往查看'}</a>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

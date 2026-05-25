@@ -1,17 +1,18 @@
 :root {
-  --primary: #cc785c;
-  --primary-active: #a9583e;
-  --ink: #141413;
-  --body: #3d3d3a;
-  --body-strong: #252523;
-  --muted: #6c6a64;
-  --muted-soft: #8e8b82;
-  --canvas: #faf9f5;
-  --surface-soft: #f5f0e8;
-  --surface-cream-strong: #e8e0d2;
-  --surface-dark: #181715;
-  --hairline: #e6dfd8;
-  --hairline-soft: #ebe6df;
+  --primary: #c96442;
+  --primary-active: #a94e2f;
+  --ink: #1a1a18;
+  --body: #4a4a45;
+  --body-strong: #2d2d2a;
+  --muted: #7a776f;
+  --muted-soft: #9e9a91;
+  --canvas: #faf8f5;
+  --surface-soft: #f0ebe2;
+  --surface-alt: #ede8df;
+  --surface-cream-strong: #e4ddd2;
+  --surface-dark: #1c1b18;
+  --hairline: #e0d9ce;
+  --hairline-soft: #ebe6dc;
   --font-display: 'Cormorant Garamond', 'Tiempos Headline', Garamond, 'Times New Roman', serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --spacing-md: 16px;
@@ -73,6 +74,13 @@ button {
 
 .section {
   padding: var(--spacing-section) 0;
+  position: relative;
+  z-index: 1;
+}
+
+.section::before,
+.section::after {
+  z-index: 2;
 }
 
 .display-xl,
@@ -95,7 +103,7 @@ button {
 }
 
 .caption-uppercase {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.4;
   letter-spacing: 1.5px;
@@ -240,6 +248,20 @@ button {
   display: flex;
   align-items: center;
   padding-top: calc(64px + var(--spacing-section));
+  position: relative;
+  z-index: 1;
+}
+
+.hero-band::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--canvas), var(--surface-soft));
+  pointer-events: none;
+  z-index: 2;
 }
 
 .hero-content {
@@ -307,7 +329,7 @@ button {
 .status-lines span {
   display: block;
   margin-bottom: 8px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.4;
   letter-spacing: 1.5px;
@@ -317,6 +339,29 @@ button {
 
 .intro-section {
   background: var(--surface-soft);
+  position: relative;
+}
+
+.intro-section::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--canvas), var(--surface-soft));
+  pointer-events: none;
+}
+
+.intro-section::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--surface-soft), var(--canvas));
+  pointer-events: none;
 }
 
 .intro-block {
@@ -334,7 +379,7 @@ button {
 
 .intro-label {
   padding-top: 9px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   letter-spacing: 1.5px;
   color: var(--muted);
@@ -360,7 +405,7 @@ button {
 
 .intro-lead {
   font-family: var(--font-display);
-  font-size: clamp(28px, 4vw, 42px) !important;
+  font-size: clamp(24px, 3.5vw, 36px) !important;
   line-height: 1.2 !important;
   letter-spacing: -0.5px;
   color: var(--ink);
@@ -382,9 +427,9 @@ button {
 
 .numbered-line span {
   font-family: var(--font-display);
-  font-size: 36px;
+  font-size: 40px;
   line-height: 1;
-  color: var(--surface-cream-strong);
+  color: var(--muted-soft);
 }
 
 .status-lines p,
@@ -409,10 +454,158 @@ button {
   color: var(--ink);
 }
 
+.works-lines .work-content h3 {
+  margin-bottom: 8px;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+}
+
+.works-lines .work-content p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--body);
+}
+
+.works-lines .work-content a {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--primary);
+  word-break: break-all;
+}
+
+.works-section {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: var(--spacing-xxl);
+}
+
+#works {
+  background: var(--canvas);
+  position: relative;
+}
+
+#works::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--surface-soft), var(--canvas));
+  pointer-events: none;
+}
+
+#works::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--canvas), var(--surface-soft));
+  pointer-events: none;
+}
+
+.works-label {
+  padding-top: 9px;
+}
+
+.works-label .caption-uppercase {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+}
+
+.works-label .caption-uppercase::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  margin-bottom: 16px;
+  background: var(--primary);
+}
+
+.works-content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.work-item {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 24px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.work-item:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.work-number {
+  font-family: var(--font-display);
+  font-size: 40px;
+  line-height: 1;
+  color: var(--muted-soft);
+}
+
+.work-title {
+  margin-bottom: 12px;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+}
+
+.work-text {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--body);
+}
+
+.work-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--primary);
+}
+
+@media (max-width: 1024px) {
+  .works-section {
+    grid-template-columns: 140px minmax(0, 1fr);
+    gap: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .works-section {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .work-item {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+
+  .work-number {
+    font-size: 30px;
+  }
+}
+
 .dream-block blockquote {
   margin-bottom: 24px;
   font-family: var(--font-display);
-  font-size: clamp(36px, 5vw, 60px);
+  font-size: clamp(28px, 4vw, 42px);
   font-weight: 400;
   line-height: 1.08;
   letter-spacing: -1px;
@@ -423,6 +616,19 @@ button {
   min-height: 72vh;
   display: flex;
   align-items: center;
+  background: var(--surface-soft);
+  position: relative;
+}
+
+.contact-section::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--canvas), var(--surface-soft));
+  pointer-events: none;
 }
 
 .contact-inner {
@@ -431,7 +637,12 @@ button {
 
 .contact-inner .caption-uppercase {
   margin-bottom: 24px;
+  font-size: 16px;
   color: var(--primary);
+}
+
+.contact-inner .display-lg {
+  font-size: clamp(28px, 4vw, 42px);
 }
 
 .contact-links {
@@ -444,7 +655,7 @@ button {
 }
 
 .contact-links a {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .footer {
