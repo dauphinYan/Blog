@@ -39,6 +39,15 @@
   --hairline-soft: #302f2b;
 }
 
+[data-theme="dark"] .intro-section,
+[data-theme="dark"] .contact-section {
+  background: rgba(36, 35, 32, 0.85);
+}
+
+[data-theme="dark"] #works {
+  background: rgba(26, 25, 22, 0.85);
+}
+
 *,
 *::before,
 *::after {
@@ -401,7 +410,7 @@ button {
 }
 
 .intro-section {
-  background: var(--surface-soft);
+  background: rgba(240, 235, 226, 0.85);
   position: relative;
 }
 
@@ -548,7 +557,7 @@ button {
 }
 
 #works {
-  background: var(--canvas);
+  background: rgba(250, 248, 245, 0.85);
   position: relative;
 }
 
@@ -679,7 +688,7 @@ button {
   min-height: 72vh;
   display: flex;
   align-items: center;
-  background: var(--surface-soft);
+  background: rgba(240, 235, 226, 0.85);
   position: relative;
 }
 
