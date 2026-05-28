@@ -22,6 +22,23 @@
   --spacing-section: 96px;
 }
 
+[data-theme="dark"] {
+  --primary: #e07a5a;
+  --primary-active: #c96442;
+  --ink: #f0ebe2;
+  --body: #c5bfb5;
+  --body-strong: #ddd8ce;
+  --muted: #9e9a91;
+  --muted-soft: #7a776f;
+  --canvas: #1a1916;
+  --surface-soft: #242320;
+  --surface-alt: #2a2926;
+  --surface-cream-strong: #353430;
+  --surface-dark: #0f0e0c;
+  --hairline: #3a3935;
+  --hairline-soft: #302f2b;
+}
+
 *,
 *::before,
 *::after {
@@ -116,8 +133,13 @@ button {
   z-index: 1000;
   height: 64px;
   border-bottom: 1px solid var(--hairline-soft);
-  background: rgba(250, 249, 245, 0.94);
+  background: rgba(250, 248, 245, 0.94);
   backdrop-filter: blur(10px);
+  transition: background 0.3s ease;
+}
+
+[data-theme="dark"] .top-nav {
+  background: rgba(26, 25, 22, 0.94);
 }
 
 .nav-container {
@@ -130,7 +152,7 @@ button {
 }
 
 .nav-brand,
-.nav-links {
+.nav-right {
   display: flex;
   align-items: center;
 }
@@ -162,6 +184,12 @@ button {
 }
 
 .nav-links {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+.nav-right {
   gap: 32px;
 }
 
@@ -192,6 +220,40 @@ button {
 .nav-link:hover::after,
 .nav-link.active::after {
   width: 100%;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  color: var(--muted);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.theme-toggle:hover {
+  color: var(--ink);
+  background: var(--surface-soft);
+}
+
+.icon-moon {
+  display: none;
+}
+
+[data-theme="dark"] .icon-sun {
+  display: none;
+}
+
+[data-theme="dark"] .icon-moon {
+  display: block;
+}
+
+.mobile-right {
+  display: none;
+  align-items: center;
+  gap: 8px;
 }
 
 .mobile-menu-btn {
@@ -229,6 +291,7 @@ button {
   gap: 24px;
   padding: 32px 24px;
   background: var(--canvas);
+  transition: background 0.3s ease;
 }
 
 .mobile-menu.active {
@@ -715,8 +778,14 @@ button {
     width: min(100% - 32px, 1200px);
   }
 
-  .nav-links {
+  .nav-right {
     display: none;
+  }
+
+  .mobile-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   .mobile-menu-btn {
