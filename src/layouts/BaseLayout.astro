@@ -29,23 +29,53 @@ const { title, description } = Astro.props;
     <AnimatedBackground />
     <slot />
     <script>
-      const animatedElements = document.querySelectorAll('.animate-fade-up');
+      const slides = [...document.querySelectorAll<HTMLElement>('.slide[id]')];
+      let activeSlide: HTMLElement | undefined;
 
-      if ('IntersectionObserver' in window) {
+      const activateSlide = (nextSlide: HTMLElement) => {
+        if (nextSlide === activeSlide) return;
+
+        const direction = activeSlide && nextSlide.offsetTop < activeSlide.offsetTop ? 'backward' : 'forward';
+
+        if (activeSlide) {
+          activeSlide.classList.remove('is-active', 'is-entering-forward', 'is-entering-backward');
+          activeSlide.classList.add(`is-exiting-${direction}`);
+        }
+
+        nextSlide.classList.remove('is-exiting-forward', 'is-exiting-backward', 'is-active');
+        nextSlide.classList.add(`is-entering-${direction}`);
+        activeSlide = nextSlide;
+
+        requestAnimationFrame(() => {
+          if (activeSlide !== nextSlide) return;
+          nextSlide.classList.add('is-active');
+        });
+
+        document.dispatchEvent(new CustomEvent('slidechange', { detail: { id: nextSlide.id } }));
+      };
+
+      const findCenteredSlide = () => {
+        const viewportCenter = window.innerHeight / 2;
+        return slides.reduce<HTMLElement | undefined>((closest, slide) => {
+          if (!closest) return slide;
+          const slideCenter = slide.getBoundingClientRect().top + slide.getBoundingClientRect().height / 2;
+          const closestCenter = closest.getBoundingClientRect().top + closest.getBoundingClientRect().height / 2;
+          return Math.abs(slideCenter - viewportCenter) < Math.abs(closestCenter - viewportCenter) ? slide : closest;
+        }, undefined);
+      };
+
+      if ('IntersectionObserver' in window && slides.length) {
         const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-              }
-            });
+          () => {
+            const centeredSlide = findCenteredSlide();
+            if (centeredSlide) activateSlide(centeredSlide);
           },
-          { rootMargin: '0px 0px -50px 0px', threshold: 0.1 },
+          { threshold: [0.5] },
         );
 
-        animatedElements.forEach((element) => observer.observe(element));
+        slides.forEach((slide) => observer.observe(slide));
       } else {
-        animatedElements.forEach((element) => element.classList.add('visible'));
+        slides.forEach((slide) => slide.classList.add('is-active'));
       }
     </script>
   </body>

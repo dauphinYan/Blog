@@ -1,0 +1,11 @@
+---
+import { slides } from '@/content/slides';
+---
+
+<nav class="slide-pager" aria-label="页面进度">
+  {slides.map((slide, index) => (
+    <a href={`#${slide.id}`} class="slide-pager-dot" aria-label={`前往${slide.label}`} data-slide-id={slide.id}>
+      <span class="sr-only">{index + 1}. {slide.label}</span>
+    </a>
+  ))}
+</nav>
