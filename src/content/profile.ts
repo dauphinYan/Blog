@@ -38,16 +38,15 @@ export const profile = {
   ],
   works: [
     {
-      title: '植物大战僵尸-花园保卫战',
-      text: '基于 UnrealEngine5 开发的 3D 版重置，同时玩家需要操作戴夫抵御僵尸的入侵。',
-    },
-    {
+      id: 'seer-assistant',
       title: '赛尔号记牌器',
       text: '游戏辅助，通过逆向游戏客户端，抓取网络数据包并解析数据，实现游戏数据记录，帮助新手玩家。',
-      link: 'https://docs.qq.com/doc/DVnNZQktYYWdTTVpy',
+      tags: ['逆向', '抓包', 'QT'],
+      link: 'https://www.bilibili.com/video/BV1LgdUBKEr5/',
       linkText: '前往查看',
     },
     {
+      id: 'arpg-demo',
       title: 'ARPG（Demo）',
       text: '制作中，主要目的是验证技术可行性。',
       link: 'https://www.bilibili.com/video/BV17jLM6bEaY/?spm_id_from=333.1387.homepage.video_card.click&vd_source=6026dadcdf13faee873c35620815f5ba',

@@ -165,6 +165,78 @@ button {
   background: rgba(26, 25, 22, 0.94);
 }
 
+.top-nav[data-surface="ember"] {
+  border-bottom-color: rgba(238, 181, 100, 0.28);
+  background: rgba(25, 11, 7, 0.82);
+}
+
+.top-nav[data-surface="ember"] .nav-brand {
+  color: #f8e5c5;
+}
+
+.top-nav[data-surface="ember"] .nav-avatar {
+  border-color: rgba(239, 192, 123, 0.55);
+}
+
+.top-nav[data-surface="ember"] .nav-link,
+.top-nav[data-surface="ember"] .theme-toggle {
+  color: #dac3a1;
+}
+
+.top-nav[data-surface="ember"] .nav-link:hover,
+.top-nav[data-surface="ember"] .nav-link.active,
+.top-nav[data-surface="ember"] .theme-toggle:hover {
+  color: #fff0d5;
+}
+
+.top-nav[data-surface="ember"] .nav-link::after {
+  background: #efad59;
+}
+
+.top-nav[data-surface="ember"] .theme-toggle:hover {
+  background: rgba(243, 185, 103, 0.14);
+}
+
+.top-nav[data-surface="ember"] .mobile-menu-btn span {
+  background: #f8e5c5;
+}
+
+.top-nav[data-surface="seer"] {
+  border-bottom-color: rgba(169, 215, 209, 0.24);
+  background: rgba(18, 26, 32, 0.88);
+}
+
+.top-nav[data-surface="seer"] .nav-brand {
+  color: #eaf1ee;
+}
+
+.top-nav[data-surface="seer"] .nav-avatar {
+  border-color: rgba(169, 215, 209, 0.5);
+}
+
+.top-nav[data-surface="seer"] .nav-link,
+.top-nav[data-surface="seer"] .theme-toggle {
+  color: #bfd0d4;
+}
+
+.top-nav[data-surface="seer"] .nav-link:hover,
+.top-nav[data-surface="seer"] .nav-link.active,
+.top-nav[data-surface="seer"] .theme-toggle:hover {
+  color: #e5fffb;
+}
+
+.top-nav[data-surface="seer"] .nav-link::after {
+  background: #79c7c1;
+}
+
+.top-nav[data-surface="seer"] .theme-toggle:hover {
+  background: rgba(121, 199, 193, 0.14);
+}
+
+.top-nav[data-surface="seer"] .mobile-menu-btn span {
+  background: #eaf1ee;
+}
+
 .nav-container {
   width: min(100% - 48px, 1200px);
   height: 100%;
@@ -315,6 +387,32 @@ button {
   padding: 32px 24px;
   background: var(--canvas);
   transition: background 0.3s ease;
+}
+
+.mobile-menu[data-surface="ember"] {
+  background: #190b07;
+}
+
+.mobile-menu[data-surface="ember"] .mobile-link {
+  border-bottom-color: rgba(238, 181, 100, 0.24);
+  color: #f8e5c5;
+}
+
+.mobile-menu[data-surface="ember"] .mobile-link.active {
+  color: #efad59;
+}
+
+.mobile-menu[data-surface="seer"] {
+  background: #121a20;
+}
+
+.mobile-menu[data-surface="seer"] .mobile-link {
+  border-bottom-color: rgba(169, 215, 209, 0.2);
+  color: #eaf1ee;
+}
+
+.mobile-menu[data-surface="seer"] .mobile-link.active {
+  color: #79c7c1;
 }
 
 .mobile-menu.active {

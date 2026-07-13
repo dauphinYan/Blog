@@ -7,7 +7,7 @@ const avatarSrc = `${base}assets/avatar.jpg`;
 const navItems = navSlides.map((slide) => ({ href: `#${slide.id}`, label: slide.navLabel! }));
 ---
 
-<nav class="top-nav">
+<nav class="top-nav" data-surface="default">
   <div class="nav-container">
     <a href="#welcome" class="nav-brand" aria-label="回到欢迎区域">
       <span class="nav-avatar">
@@ -64,16 +64,22 @@ const navItems = navSlides.map((slide) => ({ href: `#${slide.id}`, label: slide.
   </div>
 </nav>
 
-<div class="mobile-menu" aria-label="移动端导航">
+<div class="mobile-menu" data-surface="default" aria-label="移动端导航">
   {navItems.map((item) => <a href={item.href} class="mobile-link">{item.label}</a>)}
 </div>
 
 <script>
-  const nav = document.querySelector('.top-nav');
   const menuButton = document.querySelector<HTMLButtonElement>('.mobile-menu-btn');
   const mobileMenu = document.querySelector('.mobile-menu');
+  const nav = document.querySelector<HTMLElement>('.top-nav');
   const navLinks = document.querySelectorAll<HTMLAnchorElement>('.nav-link, .mobile-link');
   const themeToggles = document.querySelectorAll<HTMLButtonElement>('.theme-toggle');
+  let activeSlideId = location.hash.slice(1) || 'welcome';
+
+  const updateSurface = (surface = 'default') => {
+    nav?.setAttribute('data-surface', surface);
+    mobileMenu?.setAttribute('data-surface', surface);
+  };
 
   const closeMenu = () => {
     mobileMenu?.classList.remove('active');
@@ -103,19 +109,27 @@ const navItems = navSlides.map((slide) => ({ href: `#${slide.id}`, label: slide.
     });
   });
 
-   const pagerDots = document.querySelectorAll<HTMLAnchorElement>('.slide-pager-dot');
-   const updateActiveSlide = (id: string) => {
-     pagerDots.forEach((dot) => dot.classList.toggle('active', dot.dataset.slideId === id));
+    const pagerDots = document.querySelectorAll<HTMLAnchorElement>('.slide-pager-dot');
+    const updateActiveSlide = (id: string) => {
+      activeSlideId = id;
+      pagerDots.forEach((dot) => dot.classList.toggle('active', dot.dataset.slideId === id));
      navLinks.forEach((link) => {
        const isIntroSlide = ['intro', 'experience', 'current', 'hobbies', 'dream'].includes(id) && link.getAttribute('href') === '#intro';
-       link.classList.toggle('active', link.getAttribute('href') === `#${id}` || isIntroSlide);
-     });
-   };
+        link.classList.toggle('active', link.getAttribute('href') === `#${id}` || isIntroSlide);
+      });
+      const slide = document.getElementById(id);
+      const activeWork = slide?.querySelector<HTMLElement>('[data-work-panel].is-active');
+      updateSurface(activeWork?.dataset.navSurface ?? slide?.dataset.navSurface ?? 'default');
+    };
 
    document.addEventListener('slidechange', (event) => {
      updateActiveSlide((event as CustomEvent<{ id: string }>).detail.id);
-   });
-   updateActiveSlide(location.hash.slice(1) || 'welcome');
+    });
+    updateActiveSlide(location.hash.slice(1) || 'welcome');
+    document.addEventListener('workchange', (event) => {
+      if (activeSlideId !== 'works') return;
+      updateSurface((event as CustomEvent<{ surface: string }>).detail.surface);
+    });
 
   const initTheme = () => {
     const saved = localStorage.getItem('theme');

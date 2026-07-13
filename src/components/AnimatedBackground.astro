@@ -65,8 +65,6 @@
     if (!ctx) return;
 
     let lines: Line[] = [];
-    let animationId: number;
-
     function resize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -78,14 +76,15 @@
     }
 
     function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // The guard above guarantees a rendering context for the animation lifetime.
+      ctx!.clearRect(0, 0, canvas.width, canvas.height);
 
       for (const line of lines) {
         line.update(canvas);
-        line.draw(ctx);
+        line.draw(ctx!);
       }
 
-      animationId = requestAnimationFrame(animate);
+      requestAnimationFrame(animate);
     }
 
     resize();

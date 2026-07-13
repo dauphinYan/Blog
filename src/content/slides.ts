@@ -9,4 +9,6 @@ export const slides = [
   { id: 'contact', label: '联系', navLabel: '联系' },
 ] as const;
 
-export const navSlides = slides.filter((slide) => slide.navLabel);
+export const navSlides = slides.filter(
+  (slide): slide is (typeof slides)[number] & { navLabel: string } => 'navLabel' in slide,
+);
