@@ -89,12 +89,12 @@ const otherWorks = profile.works.filter((work) => work.id !== 'seer-assistant');
           <span class="archive-orb archive-orb-one" aria-hidden="true"></span>
           <span class="archive-orb archive-orb-two" aria-hidden="true"></span>
           <div class="archive-content">
-            <p class="work-kicker">{String(index + 2).padStart(2, '0')} / GAME PROJECT</p>
+            <p class="work-kicker">{String(index + 3).padStart(2, '0')} / GAME PROJECT</p>
             <h3>{item.title}</h3>
             <p>{item.text}</p>
             {item.link && <a href={item.link} target="_blank" rel="noopener noreferrer">{item.linkText || '前往查看'} <span aria-hidden="true">&#8599;</span></a>}
           </div>
-          <p class="archive-index" aria-hidden="true">{String(index + 2).padStart(2, '0')}</p>
+          <p class="archive-index" aria-hidden="true">{String(index + 3).padStart(2, '0')}</p>
         </article>
       ))}
     </div>

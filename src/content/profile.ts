@@ -40,7 +40,7 @@ export const profile = {
     {
       id: 'seer-assistant',
       title: '赛尔号记牌器',
-      text: '游戏辅助，通过逆向游戏客户端，抓取网络数据包并解析数据，实现游戏数据记录，帮助新手玩家。',
+      text: '游戏辅助，通过抓取网络数据包，解析数据，实现对战信息记录，帮助新手玩家。当前已累计下载 3000+ 次。',
       tags: ['逆向', '抓包', 'QT'],
       link: 'https://www.bilibili.com/video/BV1LgdUBKEr5/',
       linkText: '前往查看',
@@ -49,7 +49,7 @@ export const profile = {
       id: 'arpg-demo',
       title: 'ARPG（Demo）',
       text: '制作中，主要目的是验证技术可行性。',
-      link: 'https://www.bilibili.com/video/BV17jLM6bEaY/?spm_id_from=333.1387.homepage.video_card.click&vd_source=6026dadcdf13faee873c35620815f5ba',
+      link: 'https://www.bilibili.com/video/BV17jLM6bEaY/',
       linkText: '前往查看',
     },
   ],
