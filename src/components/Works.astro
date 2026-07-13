@@ -110,6 +110,7 @@ const otherWorks = profile.works.filter((work) => work.id !== 'seer-assistant');
         </button>
       </div>
     </div>
+    <div class="carousel-progress" data-autoplay-progress aria-hidden="true"><span></span></div>
   </div>
 </section>
 
@@ -121,10 +122,12 @@ const otherWorks = profile.works.filter((work) => work.id !== 'seer-assistant');
     const previous = carousel.querySelector<HTMLButtonElement>('[data-work-prev]');
     const next = carousel.querySelector<HTMLButtonElement>('[data-work-next]');
     const currentLabel = carousel.querySelector<HTMLElement>('[data-current-work]');
+    const autoplayProgress = carousel.querySelector<HTMLElement>('[data-autoplay-progress]');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let currentIndex = 0;
     let timer: number | undefined;
     let touchStartX = 0;
+    let isInView = false;
 
     const showPanel = (nextIndex: number) => {
       currentIndex = (nextIndex + panels.length) % panels.length;
@@ -137,14 +140,28 @@ const otherWorks = profile.works.filter((work) => work.id !== 'seer-assistant');
       document.dispatchEvent(new CustomEvent('workchange', { detail: { surface: panels[currentIndex]?.dataset.navSurface ?? 'default' } }));
     };
 
+    const restartProgress = () => {
+      if (!autoplayProgress) return;
+      autoplayProgress.classList.remove('is-running');
+      void autoplayProgress.offsetWidth;
+      autoplayProgress.classList.add('is-running');
+    };
+
     const stopAutoplay = () => {
       if (timer) window.clearInterval(timer);
       timer = undefined;
+      autoplayProgress?.classList.remove('is-running');
     };
 
     const startAutoplay = () => {
       stopAutoplay();
-      if (!reducedMotion.matches) timer = window.setInterval(() => showPanel(currentIndex + 1), 7000);
+      if (isInView && !document.hidden && !reducedMotion.matches) {
+        restartProgress();
+        timer = window.setInterval(() => {
+          showPanel(currentIndex + 1);
+          restartProgress();
+        }, 7000);
+      }
     };
 
     const move = (direction: number) => {
@@ -154,8 +171,7 @@ const otherWorks = profile.works.filter((work) => work.id !== 'seer-assistant');
 
     previous?.addEventListener('click', () => move(-1));
     next?.addEventListener('click', () => move(1));
-    carousel.addEventListener('mouseenter', stopAutoplay);
-    carousel.addEventListener('mouseleave', startAutoplay);
+    document.addEventListener('workcarouselinteraction', startAutoplay);
     carousel.addEventListener('focusin', stopAutoplay);
     carousel.addEventListener('focusout', (event) => {
       if (!carousel.contains(event.relatedTarget as Node | null)) startAutoplay();
@@ -181,7 +197,11 @@ const otherWorks = profile.works.filter((work) => work.id !== 'seer-assistant');
     }, { passive: true });
     document.addEventListener('visibilitychange', () => document.hidden ? stopAutoplay() : startAutoplay());
     reducedMotion.addEventListener('change', startAutoplay);
-    startAutoplay();
+    new IntersectionObserver(([entry]) => {
+      isInView = entry?.isIntersecting ?? false;
+      if (isInView) startAutoplay();
+      else stopAutoplay();
+    }, { threshold: 0.25 }).observe(carousel);
   }
 
   const screenshotCarousel = document.querySelector<HTMLElement>('[data-screenshot-carousel]');
@@ -218,10 +238,12 @@ const otherWorks = profile.works.filter((work) => work.id !== 'seer-assistant');
         if (currentIndex === 0) currentIndex = 3;
         if (currentIndex === slides.length - 1) currentIndex = 1;
         positionSlides(false);
+        document.dispatchEvent(new Event('workcarouselinteraction'));
         return;
       }
       isTransitioning = true;
       positionSlides();
+      document.dispatchEvent(new Event('workcarouselinteraction'));
     };
 
     previous?.addEventListener('click', () => moveSlides(-1));
@@ -231,6 +253,7 @@ const otherWorks = profile.works.filter((work) => work.id !== 'seer-assistant');
       currentIndex = index + 1;
       isTransitioning = !reducedMotion.matches;
       positionSlides(reducedMotion.matches === false);
+      document.dispatchEvent(new Event('workcarouselinteraction'));
     }));
     track?.addEventListener('transitionend', () => {
       if (currentIndex === 0) {
@@ -302,6 +325,9 @@ const otherWorks = profile.works.filter((work) => work.id !== 'seer-assistant');
   .carousel-button { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid rgba(246, 217, 168, .5); color: #f6d9a8; transition: color .2s ease, background .2s ease; }
   .carousel-button:hover, .carousel-button:focus-visible { color: #251109; background: #f6d9a8; }
   .carousel-button svg { width: 19px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+  .carousel-progress { position: absolute; right: max(32px, calc((100vw - 1200px) / 2)); bottom: 92px; z-index: 8; width: 108px; height: 2px; overflow: hidden; background: rgba(246, 217, 168, .3); }
+  .carousel-progress span { display: block; width: 100%; height: 100%; background: #f6d9a8; transform: scaleX(0); transform-origin: left; }
+  .carousel-progress.is-running span { animation: carousel-progress 7s linear; }
   .archive-panel { display: flex; align-items: center; background: #18120f; isolation: isolate; }
   .archive-panel::before { content: ''; position: absolute; inset: 0; background: linear-gradient(120deg, #190e08, #2c211a 50%, #110d0b); }
   .archive-orb { position: absolute; border-radius: 50%; filter: blur(4px); opacity: .7; }
@@ -315,6 +341,7 @@ const otherWorks = profile.works.filter((work) => work.id !== 'seer-assistant');
   .archive-index { position: absolute; right: 6vw; bottom: 11vh; z-index: 1; font-family: var(--font-display); font-size: clamp(160px, 27vw, 420px); line-height: .7; color: rgba(231, 196, 148, .06); }
   @keyframes blaze { to { transform: translate(12%, -10%) scale(1.18); opacity: .8; } }
   @keyframes ember { 0% { transform: translate3d(0, 0, 0) scale(.4); opacity: 0; } 15% { opacity: .9; } 100% { transform: translate3d(var(--drift), -90vh, 0) scale(1.3); opacity: 0; } }
+  @keyframes carousel-progress { to { transform: scaleX(1); } }
   @media (max-width: 768px) {
     .work-carousel, .work-track, .work-panel { min-height: max(1120px, 100svh); }
     .lock-knock-cover { display: none; }
@@ -330,11 +357,13 @@ const otherWorks = profile.works.filter((work) => work.id !== 'seer-assistant');
     .seer-screenshot { position: relative; top: auto; right: auto; width: min(72vw, 360px); height: auto; margin: 20px auto 88px; transform: none; }
     .seer-screenshot img { height: auto; }
     .carousel-ui { left: 24px; right: 24px; bottom: 24px; }
+    .carousel-progress { right: 24px; bottom: 82px; }
     .archive-content { width: calc(100% - 48px); }
     .archive-index { right: 0; bottom: 12vh; }
   }
   @media (prefers-reduced-motion: reduce) {
     .work-panel, .lock-knock-cover, .lock-knock-title, .lock-knock-summary, .work-tags, .screenshot-carousel, .screenshot-track, .screenshot-slide, .archive-content { transition: none; }
     .firelight, .embers i { animation: none; }
+    .carousel-progress { display: none; }
   }
 </style>
