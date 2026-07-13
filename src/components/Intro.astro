@@ -44,31 +44,3 @@ import { profile } from '@/content/profile';
     </div>
   </div>
 </section>
-
-<section id="hobbies" class="section slide intro-section">
-  <div class="container">
-    <div class="intro-block animate-fade-up">
-      <div class="intro-label">爱好</div>
-      <div class="intro-body hobby-lines">
-        {profile.hobbies.map((item) => (
-          <div>
-            <h3>{item.title}</h3>
-            <p>{item.text}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="dream" class="section slide intro-section">
-  <div class="container">
-    <div class="intro-block dream-block animate-fade-up">
-      <div class="intro-label">梦想</div>
-      <div class="intro-body">
-        <blockquote>{profile.dream.quote}</blockquote>
-        <p>{profile.dream.text}</p>
-      </div>
-    </div>
-  </div>
-</section>

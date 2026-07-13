@@ -1,0 +1,197 @@
+---
+import { profile } from '@/content/profile';
+import conanCardOne from '../../assets/Conan/Conan_Screenshot_1.jpg';
+import conanCardTwo from '../../assets/Conan/Conan_Screenshot_2.jpg';
+import conanCardThree from '../../assets/Conan/Conan_Screenshot_3.jpg';
+
+const cards = [
+  { image: conanCardOne, alt: '名侦探柯南画面：夜色中的扑克牌' },
+  { image: conanCardTwo, alt: '名侦探柯南画面：柯南与灰原哀' },
+  { image: conanCardThree, alt: '名侦探柯南画面：灰原哀特写' },
+];
+---
+
+<section id="anime" class="anime-slide slide" aria-label="动漫">
+  <div class="anime-carousel" data-anime-carousel tabindex="0">
+    {profile.anime.map((anime, animeIndex) => (
+      <article class:list={['anime-panel', { 'is-active': animeIndex === 0 }]} data-anime-panel aria-hidden={animeIndex === 0 ? 'false' : 'true'}>
+        <div class="anime-copy">
+          <p class="anime-kicker">{anime.label}</p>
+          <h2>{anime.title}</h2>
+          <p class="anime-description">{anime.text}</p>
+          <div class="anime-tags" aria-label="动漫标签">
+            {anime.tags.map((tag) => <span>{tag}</span>)}
+          </div>
+        </div>
+
+        <div class="anime-card-stage" data-card-stage aria-label={`${anime.title}画面卡片`}>
+          {cards.map((card, index) => (
+            <button class:list={['anime-card', { 'is-active': index === 0 }]} type="button" data-anime-card data-position={index} aria-label={`查看${card.alt}`} aria-pressed={index === 0 ? 'true' : 'false'}>
+              <img src={card.image.src} alt={card.alt} />
+              <span>{String(index + 1).padStart(2, '0')} / DETECTIVE CONAN</span>
+            </button>
+          ))}
+        </div>
+      </article>
+    ))}
+
+    {profile.anime.length > 1 && (
+      <div class="anime-ui">
+        <p class="anime-count" aria-live="polite"><span data-current-anime>01</span><i></i><span>{String(profile.anime.length).padStart(2, '0')}</span></p>
+        <div class="anime-controls">
+          <button type="button" class="anime-button" data-anime-prev aria-label="上一部动漫">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+          </button>
+          <button type="button" class="anime-button" data-anime-next aria-label="下一部动漫">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+          </button>
+        </div>
+      </div>
+    )}
+  </div>
+</section>
+
+<script>
+  const carousel = document.querySelector<HTMLElement>('[data-anime-carousel]');
+
+  if (carousel) {
+    const panels = [...carousel.querySelectorAll<HTMLElement>('[data-anime-panel]')];
+    const previousAnime = carousel.querySelector<HTMLButtonElement>('[data-anime-prev]');
+    const nextAnime = carousel.querySelector<HTMLButtonElement>('[data-anime-next]');
+    const currentLabel = carousel.querySelector<HTMLElement>('[data-current-anime]');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let currentAnimeIndex = 0;
+    let timer: number | undefined;
+    let touchStartX = 0;
+
+    const showAnime = (nextIndex: number) => {
+      currentAnimeIndex = (nextIndex + panels.length) % panels.length;
+      panels.forEach((panel, index) => {
+        const active = index === currentAnimeIndex;
+        panel.classList.toggle('is-active', active);
+        panel.setAttribute('aria-hidden', String(!active));
+      });
+      if (currentLabel) currentLabel.textContent = String(currentAnimeIndex + 1).padStart(2, '0');
+    };
+
+    const stopAutoplay = () => {
+      if (timer) window.clearInterval(timer);
+      timer = undefined;
+    };
+
+    const startAutoplay = () => {
+      stopAutoplay();
+      if (panels.length > 1 && !reducedMotion.matches) timer = window.setInterval(() => showAnime(currentAnimeIndex + 1), 7000);
+    };
+
+    const moveAnime = (direction: number) => {
+      showAnime(currentAnimeIndex + direction);
+      startAutoplay();
+    };
+
+    const setupCardStage = (stage: HTMLElement) => {
+      const cards = [...stage.querySelectorAll<HTMLButtonElement>('[data-anime-card]')];
+      let currentCardIndex = 0;
+
+      const showCard = (nextIndex: number) => {
+        currentCardIndex = (nextIndex + cards.length) % cards.length;
+        cards.forEach((card, index) => {
+          const position = (index - currentCardIndex + cards.length) % cards.length;
+          card.dataset.position = String(position);
+          card.classList.toggle('is-active', index === currentCardIndex);
+          card.setAttribute('aria-pressed', String(index === currentCardIndex));
+        });
+      };
+
+      cards.forEach((card, index) => card.addEventListener('click', () => showCard(index)));
+      showCard(0);
+    };
+
+    previousAnime?.addEventListener('click', () => moveAnime(-1));
+    nextAnime?.addEventListener('click', () => moveAnime(1));
+    carousel.querySelectorAll<HTMLElement>('[data-card-stage]').forEach(setupCardStage);
+    carousel.addEventListener('mouseenter', stopAutoplay);
+    carousel.addEventListener('mouseleave', startAutoplay);
+    carousel.addEventListener('focusin', stopAutoplay);
+    carousel.addEventListener('focusout', (event) => {
+      if (!carousel.contains(event.relatedTarget as Node | null)) startAutoplay();
+    });
+    carousel.addEventListener('keydown', (event) => {
+      if (panels.length < 2) return;
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        moveAnime(-1);
+      }
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        moveAnime(1);
+      }
+    });
+    carousel.addEventListener('touchstart', (event) => {
+      touchStartX = event.changedTouches[0]?.clientX ?? 0;
+      stopAutoplay();
+    }, { passive: true });
+    carousel.addEventListener('touchend', (event) => {
+      const distance = (event.changedTouches[0]?.clientX ?? touchStartX) - touchStartX;
+      if (panels.length > 1 && Math.abs(distance) > 48) moveAnime(distance > 0 ? -1 : 1);
+      else startAutoplay();
+    }, { passive: true });
+    document.addEventListener('visibilitychange', () => document.hidden ? stopAutoplay() : startAutoplay());
+    reducedMotion.addEventListener('change', startAutoplay);
+    startAutoplay();
+  }
+</script>
+
+<style>
+  .anime-slide.slide { display: block; min-height: 100svh; padding: 0; background: var(--canvas); }
+  .anime-carousel { position: relative; min-height: 100svh; overflow: hidden; background: var(--canvas); color: var(--ink); outline: none; }
+  .anime-panel { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(48px, 8vw, 112px); align-items: center; width: min(100% - 64px, 1200px); min-height: 100svh; padding: 64px 0 0; margin: 0 auto; }
+  .anime-panel:not(.is-active) { display: none; }
+  .anime-copy { max-width: 520px; }
+  .anime-kicker { margin-bottom: 22px; color: var(--primary); font-size: 11px; font-weight: 600; letter-spacing: .22em; }
+  .anime-copy h2 { font-family: var(--font-display); font-size: clamp(52px, 5.8vw, 82px); font-weight: 500; line-height: .96; letter-spacing: -.055em; color: var(--ink); }
+  .anime-description { margin-top: 28px; color: var(--body); font-size: 16px; line-height: 1.85; }
+  .anime-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+  .anime-tags span { padding: 6px 10px; border: 1px solid var(--hairline); color: var(--body); font-size: 12px; letter-spacing: .08em; }
+  .anime-card-stage { position: relative; width: min(100%, 500px); height: clamp(430px, 43vw, 620px); justify-self: center; }
+  .anime-copy, .anime-card-stage { opacity: 0; }
+  .anime-slide.is-active .anime-copy { animation: anime-enter-up 480ms ease both; }
+  .anime-slide.is-active .anime-card-stage { animation: anime-enter-up 560ms ease 120ms both; }
+  .anime-slide.is-exiting-forward .anime-copy, .anime-slide.is-exiting-forward .anime-card-stage { animation: anime-exit-up 320ms ease both; }
+  .anime-slide.is-exiting-backward .anime-copy, .anime-slide.is-exiting-backward .anime-card-stage { animation: anime-exit-down 320ms ease both; }
+  .anime-card { position: absolute; inset: 0 auto auto 0; width: min(100%, 500px); aspect-ratio: 16 / 10; overflow: hidden; border: 1px solid var(--hairline); background: var(--surface-alt); box-shadow: 0 24px 52px rgba(61, 61, 58, .16); cursor: pointer; transition: transform 600ms cubic-bezier(.22, .7, .2, 1), opacity 600ms ease, filter 600ms ease; }
+  .anime-card img { width: 100%; height: 100%; object-fit: cover; }
+  .anime-card span { position: absolute; right: 16px; bottom: 14px; left: 16px; color: var(--canvas); font-size: 10px; font-weight: 600; letter-spacing: .14em; text-align: left; text-shadow: 0 2px 7px rgba(20, 20, 19, .8); }
+  .anime-card[data-position='0'] { z-index: 3; transform: translate(0, 42px) rotate(-4deg); opacity: 1; }
+  .anime-card[data-position='1'] { z-index: 2; transform: translate(9%, -10px) rotate(6deg) scale(.92); opacity: .72; filter: saturate(.72) brightness(.8); }
+  .anime-card[data-position='2'] { z-index: 1; transform: translate(3%, 134px) rotate(2deg) scale(.85); opacity: .4; filter: saturate(.45) brightness(.62); }
+  .anime-card:focus-visible { outline: 2px solid var(--primary); outline-offset: 5px; }
+  .anime-button { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid var(--hairline); color: var(--primary); background: var(--canvas); transition: color .2s ease, background .2s ease; }
+  .anime-button:hover, .anime-button:focus-visible { color: var(--canvas); background: var(--primary); }
+  .anime-button svg { width: 19px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+  .anime-ui { position: absolute; right: max(32px, calc((100vw - 1200px) / 2)); bottom: 34px; left: max(32px, calc((100vw - 1200px) / 2)); display: flex; align-items: center; justify-content: space-between; }
+  .anime-count { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 12px; letter-spacing: .15em; }
+  .anime-count i { display: block; width: 44px; height: 1px; background: var(--hairline); }
+  .anime-controls { display: flex; gap: 8px; }
+  @keyframes anime-enter-up { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes anime-exit-up { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-24px); } }
+  @keyframes anime-exit-down { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(24px); } }
+  @media (max-width: 900px) {
+    .anime-panel { grid-template-columns: minmax(0, 1fr) minmax(320px, .9fr); gap: 40px; }
+    .anime-card-stage { height: clamp(390px, 48vw, 500px); }
+  }
+  @media (max-width: 768px) {
+    .anime-panel { display: block; width: min(100% - 48px, 560px); min-height: max(900px, 100svh); padding: 108px 0 86px; }
+    .anime-copy h2 { font-size: clamp(48px, 14vw, 68px); }
+    .anime-description { margin-top: 20px; }
+    .anime-card-stage { width: min(100%, 430px); height: min(92vw, 500px); margin: 42px auto 0; }
+    .anime-card[data-position='0'] { transform: translate(0, 26px) rotate(-4deg); }
+    .anime-card[data-position='1'] { transform: translate(10%, -12px) rotate(6deg) scale(.91); }
+    .anime-card[data-position='2'] { transform: translate(4%, 105px) rotate(2deg) scale(.84); }
+    .anime-ui { right: 24px; bottom: 24px; left: 24px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .anime-copy, .anime-card-stage { opacity: 1; animation: none !important; }
+    .anime-card { transition: none; }
+  }
+</style>

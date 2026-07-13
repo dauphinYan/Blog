@@ -114,7 +114,7 @@ const navItems = navSlides.map((slide) => ({ href: `#${slide.id}`, label: slide.
       activeSlideId = id;
       pagerDots.forEach((dot) => dot.classList.toggle('active', dot.dataset.slideId === id));
      navLinks.forEach((link) => {
-       const isIntroSlide = ['intro', 'experience', 'current', 'hobbies', 'dream'].includes(id) && link.getAttribute('href') === '#intro';
+       const isIntroSlide = ['intro', 'experience', 'current', 'anime', 'dream'].includes(id) && link.getAttribute('href') === '#intro';
         link.classList.toggle('active', link.getAttribute('href') === `#${id}` || isIntroSlide);
       });
       const slide = document.getElementById(id);
