@@ -1,18 +1,25 @@
 ---
-import { profile } from '@/content/profile';
+import { translations, type Locale } from '@/content/profile';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const profile = translations[locale].profile;
 ---
 
 <section id="contact" class="section slide contact-section">
   <div class="container">
     <div class="contact-inner animate-fade-up">
-      <p class="caption-uppercase">联系</p>
-      <h2 class="display-lg">{profile.contactTitle}</h2>
+      <p class="caption-uppercase" data-i18n="sections.contact">联系</p>
+      <h2 class="display-lg" data-i18n="profile.contactTitle">{profile.contactTitle}</h2>
       <div class="contact-links">
         <a href={profile.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>
         <a href={profile.links.bilibili} target="_blank" rel="noopener noreferrer">Bilibili</a>
         <a href={`mailto:${profile.links.email}`}>Email</a>
       </div>
-      <p class="contact-copyright">© 2026 {profile.name}. 保留所有权利.</p>
+      <p class="contact-copyright">© 2026 {profile.name}. <span data-i18n="sections.copyright">保留所有权利。</span></p>
     </div>
   </div>
 </section>

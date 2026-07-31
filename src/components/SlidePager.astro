@@ -1,11 +1,19 @@
 ---
 import { slides } from '@/content/slides';
+import { translations, type Locale } from '@/content/profile';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const slidePager = translations[locale].slidePager;
 ---
 
-<nav class="slide-pager" aria-label="页面进度">
+<nav class="slide-pager" aria-label={translations[locale].nav.pagerLabel} data-i18n-aria-label="nav.pagerLabel">
   {slides.map((slide, index) => (
-    <a href={`#${slide.id}`} class="slide-pager-dot" aria-label={`前往${slide.label}`} data-slide-id={slide.id}>
-      <span class="sr-only">{index + 1}. {slide.label}</span>
+    <a href={`#${slide.id}`} class="slide-pager-dot" aria-label={slidePager[index].label} data-slide-id={slide.id} data-i18n-aria-label={`slidePager.${index}.label`}>
+      <span class="sr-only" data-i18n={`slidePager.${index}.text`}>{slidePager[index].text}</span>
     </a>
   ))}
 </nav>

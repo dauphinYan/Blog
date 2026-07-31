@@ -1,33 +1,39 @@
 ---
-import { profile } from '@/content/profile';
+import { translations, type Locale } from '@/content/profile';
 import conanCardOne from '../../assets/Conan/Conan_Screenshot_1.jpg';
 import conanCardTwo from '../../assets/Conan/Conan_Screenshot_2.jpg';
 import conanCardThree from '../../assets/Conan/Conan_Screenshot_3.jpg';
 
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const profile = translations[locale].profile;
 const cards = [
-  { image: conanCardOne, alt: '名侦探柯南画面：夜色中的扑克牌' },
-  { image: conanCardTwo, alt: '名侦探柯南画面：柯南与灰原哀' },
-  { image: conanCardThree, alt: '名侦探柯南画面：灰原哀特写' },
+  { image: conanCardOne, key: '0' },
+  { image: conanCardTwo, key: '1' },
+  { image: conanCardThree, key: '2' },
 ];
 ---
 
-<section id="anime" class="anime-slide slide" aria-label="动漫">
+<section id="anime" class="anime-slide slide" aria-label="动漫" data-i18n-aria-label="animeFeature.label">
   <div class="anime-carousel" data-anime-carousel tabindex="0">
     {profile.anime.map((anime, animeIndex) => (
       <article class:list={['anime-panel', { 'is-active': animeIndex === 0 }]} data-anime-panel aria-hidden={animeIndex === 0 ? 'false' : 'true'}>
         <div class="anime-copy">
-          <p class="anime-kicker">{anime.label}</p>
-          <h2>{anime.title}</h2>
-          <p class="anime-description">{anime.text}</p>
-          <div class="anime-tags" aria-label="动漫标签">
-            {anime.tags.map((tag) => <span>{tag}</span>)}
+          <p class="anime-kicker" data-i18n={`profile.anime.${animeIndex}.label`}>{anime.label}</p>
+          <h2 data-i18n={`profile.anime.${animeIndex}.title`}>{anime.title}</h2>
+          <p class="anime-description" data-i18n={`profile.anime.${animeIndex}.text`}>{anime.text}</p>
+          <div class="anime-tags" aria-label="动漫标签" data-i18n-aria-label="animeFeature.tagsLabel">
+            {anime.tags.map((tag, tagIndex) => <span data-i18n={`profile.anime.${animeIndex}.tags.${tagIndex}`}>{tag}</span>)}
           </div>
         </div>
 
-        <div class="anime-card-stage" data-card-stage aria-label={`${anime.title}画面卡片`}>
+        <div class="anime-card-stage" data-card-stage aria-label="名侦探柯南画面卡片" data-i18n-aria-label="animeFeature.cardStageLabel">
           {cards.map((card, index) => (
-            <button class:list={['anime-card', { 'is-active': index === 0 }]} type="button" data-anime-card data-position={index} aria-label={`查看${card.alt}`} aria-pressed={index === 0 ? 'true' : 'false'}>
-              <img src={card.image.src} alt={card.alt} />
+            <button class:list={['anime-card', { 'is-active': index === 0 }]} type="button" data-anime-card data-position={index} aria-label="查看名侦探柯南画面" data-i18n-aria-label={`animeFeature.viewCards.${card.key}`} aria-pressed={index === 0 ? 'true' : 'false'}>
+              <img src={card.image.src} alt="名侦探柯南画面" data-i18n-alt={`animeFeature.cardAlts.${card.key}`} />
               <span>{String(index + 1).padStart(2, '0')} / DETECTIVE CONAN</span>
             </button>
           ))}
@@ -39,10 +45,10 @@ const cards = [
       <div class="anime-ui">
         <p class="anime-count" aria-live="polite"><span data-current-anime>01</span><i></i><span>{String(profile.anime.length).padStart(2, '0')}</span></p>
         <div class="anime-controls">
-          <button type="button" class="anime-button" data-anime-prev aria-label="上一部动漫">
+          <button type="button" class="anime-button" data-anime-prev aria-label="上一部动漫" data-i18n-aria-label="animeFeature.previous">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
           </button>
-          <button type="button" class="anime-button" data-anime-next aria-label="下一部动漫">
+          <button type="button" class="anime-button" data-anime-next aria-label="下一部动漫" data-i18n-aria-label="animeFeature.next">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
           </button>
         </div>

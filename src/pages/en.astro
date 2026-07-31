@@ -10,11 +10,11 @@ import Contact from '@/components/Contact.astro';
 import SlidePager from '@/components/SlidePager.astro';
 import { translations } from '@/content/profile';
 
-const locale = 'zh-CN';
+const locale = 'en';
 const profile = translations[locale].profile;
 ---
 
-<BaseLayout title={`个人主页 - ${profile.name}`} description={profile.abstract} locale={locale}>
+<BaseLayout title={`Personal Homepage - ${profile.name}`} description={profile.abstract} locale={locale}>
   <Nav locale={locale} />
   <main>
     <Hero locale={locale} />

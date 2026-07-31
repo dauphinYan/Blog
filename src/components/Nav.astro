@@ -1,26 +1,34 @@
 ---
-import { profile } from '@/content/profile';
+import { translations, type Locale } from '@/content/profile';
 import { navSlides } from '@/content/slides';
 
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const content = translations[locale];
+const profile = content.profile;
 const avatarSrc = `${base}assets/avatar.jpg`;
-const navItems = navSlides.map((slide) => ({ href: `#${slide.id}`, label: slide.navLabel! }));
+const navItems = navSlides.map((slide) => ({ href: `#${slide.id}`, label: content.nav[slide.id as 'welcome' | 'intro' | 'works' | 'contact'], key: `nav.${slide.id}` }));
 ---
 
 <nav class="top-nav" data-surface="default">
   <div class="nav-container">
-    <a href="#welcome" class="nav-brand" aria-label="回到欢迎区域">
+    <a href="#welcome" class="nav-brand" aria-label={content.nav.homeLabel} data-i18n-aria-label="nav.homeLabel">
       <span class="nav-avatar">
-        <img src={avatarSrc} alt="头像" />
+        <img src={avatarSrc} alt={content.nav.avatarAlt} data-i18n-alt="nav.avatarAlt" />
       </span>
       <span class="logo-text">{profile.name}</span>
     </a>
 
     <div class="nav-right">
       <div class="nav-links">
-        {navItems.map((item) => <a href={item.href} class="nav-link">{item.label}</a>)}
+        {navItems.map((item) => <a href={item.href} class="nav-link" data-i18n={item.key}>{item.label}</a>)}
       </div>
-      <button class="theme-toggle" type="button" aria-label="切换深色模式">
+      <button class="language-toggle" type="button" aria-label={content.page.languageButtonLabel} data-i18n-aria-label="page.languageButtonLabel"><span data-i18n="page.languageButton">{content.page.languageButton}</span></button>
+      <button class="theme-toggle" type="button" aria-label={content.nav.themeToggleLabel} data-i18n-aria-label="nav.themeToggleLabel">
         <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="5"></circle>
           <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -39,7 +47,8 @@ const navItems = navSlides.map((slide) => ({ href: `#${slide.id}`, label: slide.
     </div>
 
     <div class="mobile-right">
-      <button class="theme-toggle" type="button" aria-label="切换深色模式">
+      <button class="language-toggle" type="button" aria-label={content.page.languageButtonLabel} data-i18n-aria-label="page.languageButtonLabel"><span data-i18n="page.languageButton">{content.page.languageButton}</span></button>
+      <button class="theme-toggle" type="button" aria-label={content.nav.themeToggleLabel} data-i18n-aria-label="nav.themeToggleLabel">
         <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="5"></circle>
           <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -55,7 +64,7 @@ const navItems = navSlides.map((slide) => ({ href: `#${slide.id}`, label: slide.
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
       </button>
-      <button class="mobile-menu-btn" type="button" aria-label="打开导航菜单" aria-expanded="false">
+      <button class="mobile-menu-btn" type="button" aria-label={content.nav.menuOpenLabel} aria-expanded="false" data-i18n-aria-label="nav.menuOpenLabel">
         <span></span>
         <span></span>
         <span></span>
@@ -64,16 +73,19 @@ const navItems = navSlides.map((slide) => ({ href: `#${slide.id}`, label: slide.
   </div>
 </nav>
 
-<div class="mobile-menu" data-surface="default" aria-label="移动端导航">
-  {navItems.map((item) => <a href={item.href} class="mobile-link">{item.label}</a>)}
+<div class="mobile-menu" data-surface="default" aria-label={content.nav.menuLabel} data-i18n-aria-label="nav.menuLabel">
+  {navItems.map((item) => <a href={item.href} class="mobile-link" data-i18n={item.key}>{item.label}</a>)}
 </div>
 
 <script>
+  import { translations, type Locale } from '@/content/profile';
+
   const menuButton = document.querySelector<HTMLButtonElement>('.mobile-menu-btn');
   const mobileMenu = document.querySelector('.mobile-menu');
   const nav = document.querySelector<HTMLElement>('.top-nav');
   const navLinks = document.querySelectorAll<HTMLAnchorElement>('.nav-link, .mobile-link');
   const themeToggles = document.querySelectorAll<HTMLButtonElement>('.theme-toggle');
+  const languageToggles = document.querySelectorAll<HTMLButtonElement>('.language-toggle');
   let activeSlideId = location.hash.slice(1) || 'welcome';
 
   const updateSurface = (surface = 'default') => {
@@ -151,4 +163,39 @@ const navItems = navSlides.map((slide) => ({ href: `#${slide.id}`, label: slide.
 
   initTheme();
   themeToggles.forEach((btn) => btn.addEventListener('click', toggleTheme));
+
+  const getTranslation = (locale: Locale, path: string) => {
+    const value = path.split('.').reduce<unknown>((current, key) => {
+      if (!current || typeof current !== 'object') return undefined;
+      return (current as Record<string, unknown>)[key];
+    }, translations[locale]);
+
+    return typeof value === 'string' ? value : '';
+  };
+
+  const applyLocale = (locale: Locale) => {
+    document.documentElement.lang = locale;
+    document.querySelectorAll<HTMLElement>('[data-i18n]').forEach((element) => {
+      element.textContent = getTranslation(locale, element.dataset.i18n ?? '');
+    });
+    document.querySelectorAll<HTMLElement>('[data-i18n-aria-label]').forEach((element) => {
+      element.setAttribute('aria-label', getTranslation(locale, element.dataset.i18nAriaLabel ?? ''));
+    });
+    document.querySelectorAll<HTMLImageElement>('[data-i18n-alt]').forEach((image) => {
+      image.alt = getTranslation(locale, image.dataset.i18nAlt ?? '');
+    });
+
+    const content = translations[locale];
+    document.title = `${content.page.titlePrefix} - ${content.profile.name}`;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', content.profile.abstract);
+  };
+
+  const localeBase = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+  const englishPath = `${localeBase}en`.replace(/\/+$/, '');
+  const currentPath = window.location.pathname.replace(/\/+$/, '');
+  applyLocale(currentPath === englishPath ? 'en' : 'zh-CN');
+  languageToggles.forEach((button) => button.addEventListener('click', () => {
+    const target = document.documentElement.lang === 'en' ? localeBase : `${localeBase}en/`;
+    window.location.assign(`${target}${window.location.hash}`);
+  }));
 </script>

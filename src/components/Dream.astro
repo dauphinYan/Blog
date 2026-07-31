@@ -1,14 +1,21 @@
 ---
-import { profile } from '@/content/profile';
+import { translations, type Locale } from '@/content/profile';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const profile = translations[locale].profile;
 ---
 
 <section id="dream" class="section slide intro-section">
   <div class="container">
     <div class="intro-block dream-block animate-fade-up">
-      <div class="intro-label">梦想</div>
+      <div class="intro-label" data-i18n="sections.dream">梦想</div>
       <div class="intro-body">
-        <blockquote>{profile.dream.quote}</blockquote>
-        <p>{profile.dream.text}</p>
+        <blockquote data-i18n="profile.dream.quote">{profile.dream.quote}</blockquote>
+        <p data-i18n="profile.dream.text">{profile.dream.text}</p>
       </div>
     </div>
   </div>

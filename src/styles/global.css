@@ -179,13 +179,15 @@ button {
 }
 
 .top-nav[data-surface="ember"] .nav-link,
-.top-nav[data-surface="ember"] .theme-toggle {
+.top-nav[data-surface="ember"] .theme-toggle,
+.top-nav[data-surface="ember"] .language-toggle {
   color: #dac3a1;
 }
 
 .top-nav[data-surface="ember"] .nav-link:hover,
 .top-nav[data-surface="ember"] .nav-link.active,
-.top-nav[data-surface="ember"] .theme-toggle:hover {
+.top-nav[data-surface="ember"] .theme-toggle:hover,
+.top-nav[data-surface="ember"] .language-toggle:hover {
   color: #fff0d5;
 }
 
@@ -215,13 +217,15 @@ button {
 }
 
 .top-nav[data-surface="seer"] .nav-link,
-.top-nav[data-surface="seer"] .theme-toggle {
+.top-nav[data-surface="seer"] .theme-toggle,
+.top-nav[data-surface="seer"] .language-toggle {
   color: #bfd0d4;
 }
 
 .top-nav[data-surface="seer"] .nav-link:hover,
 .top-nav[data-surface="seer"] .nav-link.active,
-.top-nav[data-surface="seer"] .theme-toggle:hover {
+.top-nav[data-surface="seer"] .theme-toggle:hover,
+.top-nav[data-surface="seer"] .language-toggle:hover {
   color: #e5fffb;
 }
 
@@ -280,12 +284,12 @@ button {
 
 .nav-links {
   display: flex;
-  gap: 32px;
+  gap: 10px;
   align-items: center;
 }
 
 .nav-right {
-  gap: 32px;
+  gap: 10px;
 }
 
 .nav-link {
@@ -331,6 +335,43 @@ button {
 .theme-toggle:hover {
   color: var(--ink);
   background: var(--surface-soft);
+}
+
+.language-toggle {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.language-toggle:hover {
+  color: var(--ink);
+  background: var(--surface-soft);
+}
+
+.language-toggle:focus-visible,
+.theme-toggle:focus-visible,
+.mobile-menu-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+@media (min-width: 769px) {
+  .nav-link,
+  .language-toggle,
+  .theme-toggle {
+    flex: 0 0 48px;
+    width: 48px;
+  }
+
+  .nav-link {
+    text-align: center;
+  }
 }
 
 .icon-moon {
@@ -513,6 +554,11 @@ button {
   font-size: 18px;
   line-height: 1.55;
   color: var(--body-strong);
+}
+
+.hero-status strong,
+.status-lines strong {
+  font-weight: inherit;
 }
 
 .hero-status p {

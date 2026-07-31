@@ -1,12 +1,19 @@
 ---
-import { profile } from '@/content/profile';
+import { translations, type Locale } from '@/content/profile';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const profile = translations[locale].profile;
 ---
 
 <section id="welcome" class="section slide hero-band immersive-hero">
   <div class="container hero-content">
     <div class="hero-text animate-fade-up">
-      <h1 class="display-xl">{profile.title}</h1>
-      <p class="hero-subtitle">{profile.tagline}</p>
+      <h1 class="display-xl" data-i18n="profile.title">{profile.title}</h1>
+      <p class="hero-subtitle" data-i18n="profile.tagline">{profile.tagline}</p>
       <div class="hero-links">
         <a href={profile.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>
         <span>·</span>
@@ -17,10 +24,10 @@ import { profile } from '@/content/profile';
     </div>
 
     <div class="hero-status animate-fade-up delay-1">
-      {profile.heroStatus.map((item) => (
+      {profile.heroStatus.map((item, index) => (
         <p>
-          <span>{item.label}</span>
-          {item.text}
+          <span data-i18n={`profile.heroStatus.${index}.label`}>{item.label}</span>
+          <strong data-i18n={`profile.heroStatus.${index}.text`}>{item.text}</strong>
         </p>
       ))}
     </div>

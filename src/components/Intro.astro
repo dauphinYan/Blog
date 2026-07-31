@@ -1,13 +1,20 @@
 ---
-import { profile } from '@/content/profile';
+import { translations, type Locale } from '@/content/profile';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const profile = translations[locale].profile;
 ---
 
 <section id="intro" class="section slide intro-section">
   <div class="container">
     <div class="intro-block animate-fade-up">
-      <div class="intro-label">自述</div>
+      <div class="intro-label" data-i18n="sections.bio">自述</div>
       <div class="intro-body">
-        <p class="intro-lead">{profile.abstract}</p>
+        <p class="intro-lead" data-i18n="profile.abstract">{profile.abstract}</p>
       </div>
     </div>
   </div>
@@ -16,12 +23,12 @@ import { profile } from '@/content/profile';
 <section id="experience" class="section slide intro-section">
   <div class="container">
     <div class="intro-block animate-fade-up">
-      <div class="intro-label">经历</div>
+      <div class="intro-label" data-i18n="sections.experience">经历</div>
       <div class="intro-body numbered-lines">
         {profile.experiences.map((item, index) => (
           <div class="numbered-line">
             <span>{String(index + 1).padStart(2, '0')}</span>
-            <p>{item}</p>
+            <p data-i18n={`profile.experiences.${index}`}>{item}</p>
           </div>
         ))}
       </div>
@@ -32,12 +39,12 @@ import { profile } from '@/content/profile';
 <section id="current" class="section slide intro-section">
   <div class="container">
     <div class="intro-block animate-fade-up">
-      <div class="intro-label">正在做</div>
+      <div class="intro-label" data-i18n="sections.current">正在做</div>
       <div class="intro-body status-lines">
-        {profile.current.map((item) => (
+        {profile.current.map((item, index) => (
           <p>
-            <span>{item.label}</span>
-            {item.text}
+            <span data-i18n={`profile.current.${index}.label`}>{item.label}</span>
+            <strong data-i18n={`profile.current.${index}.text`}>{item.text}</strong>
           </p>
         ))}
       </div>
