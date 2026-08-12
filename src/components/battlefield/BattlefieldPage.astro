@@ -1,0 +1,322 @@
+---
+import lockKnockCover from '../../../assets/LockKnock/Cover_Horizontal.jpg';
+import lockKnockLantern from '../../../assets/LockKnock/Lockknock_Screenshot_3.png';
+import lockKnockExplore from '../../../assets/LockKnock/Lockknock_Screenshot_1.png';
+import seerAssistant from '../../../assets/SeerAssistant/SeerAssistant_Screenshot.png';
+
+interface Props {
+  locale: 'zh-CN' | 'en';
+}
+
+const { locale } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const homeHref = locale === 'en' ? `${base}en/` : base;
+const languageHref = locale === 'en' ? `${base}battlefield/` : `${base}en/battlefield/`;
+const copy = locale === 'en'
+  ? {
+      title: 'Tactical Theme - Orca丶', description: 'Orca丶’s tactical cinematic portfolio.', nav: ['MISSION', 'PROFILE', 'SHOWCASE', 'CONTACT'], back: 'RETURN / HOME', language: '中文', archive: 'PERSONAL ARCHIVE / 2026', hero: 'BUILD<br />THE <em>NEXT</em><br />MISSION.', heroSummary: 'Building the next battlefield between code and imagination.', explore: 'EXPLORE WORKS', status: ['ENGINE / UNREAL ENGINE', 'STATUS / DEMO IN PROGRESS', 'LOCATION / CHINA'], scroll: 'SCROLL TO DEPLOY', brief: '01 / MISSION BRIEF', lead: 'Not copying a battle.<br />Building a world of my own.', briefCopy: 'I focus on Unreal Engine game development, validating gameplay, atmosphere, and technical direction through playable demos. Each build is a prototype for the next deployment.', profile: '02 / OPERATOR PROFILE', profileTitle: 'THE PLAYER<br />BEHIND THE <em>SCREEN.</em>', profileIntro: 'An aspiring programmer determined to make my own game. I prefer making things that can be played, tested, and improved over empty promises.', profileCards: [['BACKGROUND', 'Backend development, then a deliberate shift toward games and interactive worlds.'], ['EXPERIENCE', 'Self-directed Unreal Engine study, game tooling, packet analysis, and desktop application work.'], ['OBJECTIVE', 'Create an original game world inspired by the ambition and connection of Sword Art Online.']], operations: '03 / CURRENT OPERATIONS', operationTitle: 'ACTIVE<br /><em>LOADOUT.</em>', operationsList: [['ENGINE', 'Unreal Engine', 'Gameplay systems and technical prototypes'], ['STAGE', 'Demo validation', 'Proving core loops before expanding scope'], ['FOCUS', 'Sustainable production', 'Feasibility, atmosphere, and repeatable workflow']], showcase: '04 / SELECTED WORKS', showcaseLabel: 'Large-screen project showcase', view: 'VIEW PROJECT', previous: 'Previous project', next: 'Next project', record: 'FIELD RECORD / IMAGE ARCHIVE', navigate: 'USE', contact: '05 / OPEN CHANNEL', contactTitle: 'READY FOR<br />THE NEXT <em>MISSION?</em>', contactAction: 'CONTACT ME', coordinate: "34° 13' N / 108° 56' E<br />ORCA ARCHIVE", workDescriptions: ['Explore a Cthulhu-inspired maze while evading spirits and monsters.', 'A lantern-led atmosphere study for exploration, pressure, and environmental storytelling.', 'An in-progress gameplay demo validating technical feasibility and a sustainable production pace.', 'A desktop tool that parses network packets into battle records, with 3,000+ downloads.'], workTypes: ['UNREAL ENGINE / GAME PROJECT', 'UNREAL ENGINE / ATMOSPHERE STUDY', 'UNREAL ENGINE / GAMEPLAY DEMO', 'DESKTOP TOOL / QT'], imageSuffix: 'project scene',
+    }
+  : {
+      title: '战术主题 - Orca丶', description: 'Orca丶的战术电影主题作品集。', nav: ['任务', '档案', '作品', '联系'], back: 'RETURN / 主页', language: 'EN', archive: 'PERSONAL ARCHIVE / 2026', hero: 'BUILD<br />THE <em>NEXT</em><br />MISSION.', heroSummary: '在代码与想象之间，构建下一处战场。', explore: 'EXPLORE WORKS', status: ['ENGINE / UNREAL ENGINE', 'STATUS / DEMO IN PROGRESS', 'LOCATION / CHINA'], scroll: 'SCROLL TO DEPLOY', brief: '01 / MISSION BRIEF', lead: '不是复制一场战斗，<br />而是完成属于自己的世界。', briefCopy: '当前专注于 Unreal Engine 游戏开发，在可玩的 Demo 中验证玩法、氛围与技术路径。每一次构建，都是为下一次出发准备的原型。', profile: '02 / OPERATOR PROFILE', profileTitle: '屏幕背后的<br /><em>玩家。</em>', profileIntro: '一个特别想做出自己游戏的程序员。比起空谈，更愿意持续制作能被游玩、测试和改进的内容。', profileCards: [['背景', '曾从事服务端开发，随后主动转向游戏与交互世界。'], ['经历', '自学 Unreal Engine，参与游戏辅助、抓包解析与桌面工具开发。'], ['目标', '做出受《刀剑神域》启发，且真正属于自己的原创游戏世界。']], operations: '03 / CURRENT OPERATIONS', operationTitle: '当前<br /><em>装备。</em>', operationsList: [['引擎', 'Unreal Engine', '核心玩法与技术原型'], ['阶段', 'Demo 验证', '先证明核心循环，再逐步扩展范围'], ['重点', '持续制作', '可行性、氛围与可重复的工作流']], showcase: '04 / SELECTED WORKS', showcaseLabel: '作品大银幕展示', view: '查看项目', previous: '上一张作品', next: '下一张作品', record: 'FIELD RECORD / IMAGE ARCHIVE', navigate: '使用', contact: '05 / OPEN CHANNEL', contactTitle: '准备好开始<br />下一场<em>任务</em>了吗？', contactAction: '联系我', coordinate: "34° 13' N / 108° 56' E<br />ORCA ARCHIVE", workDescriptions: ['探索克苏鲁风格的诡异迷宫，躲避恶灵与怪物的追杀。', '以微弱提灯切开黑暗，验证探索、压迫感与环境叙事。', '正在验证核心玩法、技术可行性与可持续的制作节奏。', '通过抓取并解析网络数据包记录对战信息，累计下载 3000+ 次。'], workTypes: ['UNREAL ENGINE / 游戏项目', 'UNREAL ENGINE / 氛围研究', 'UNREAL ENGINE / 玩法 DEMO', '桌面工具 / QT'], imageSuffix: '项目画面',
+    };
+const works = [
+  {
+    number: '01',
+    title: 'LOCK KNOCK',
+    type: copy.workTypes[0], description: copy.workDescriptions[0],
+    image: lockKnockCover,
+    position: 'center',
+  },
+  {
+    number: '02',
+    title: 'THE LANTERN',
+    type: copy.workTypes[1], description: copy.workDescriptions[1],
+    image: lockKnockLantern,
+    position: 'center',
+  },
+  {
+    number: '03',
+    title: 'MAZE PROTOCOL',
+    type: copy.workTypes[2], description: copy.workDescriptions[2],
+    image: lockKnockExplore,
+    position: 'center',
+    href: 'https://www.bilibili.com/video/BV17jLM6bEaY/',
+  },
+  {
+    number: '04',
+    title: 'SEER TRACKER',
+    type: copy.workTypes[3], description: copy.workDescriptions[3],
+    image: seerAssistant,
+    position: 'center',
+    href: 'https://www.bilibili.com/video/BV1LgdUBKEr5/',
+  },
+];
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={copy.description} />
+    <title>{copy.title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="atmosphere" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="combat-effects" aria-hidden="true">
+      <div class="bullet-trails">{Array.from({ length: 5 }, (_, index) => <i style={`--y:${12 + index * 16}%;--delay:${index * 2.7}s;--duration:${5.8 + index * .45}s`}></i>)}</div>
+      <div class="smoke-field">{Array.from({ length: 9 }, (_, index) => <i style={`--x:${(index * 13 + 4) % 100}%;--size:${24 + (index % 4) * 13}vw;--delay:-${index * 1.8}s;--duration:${13 + (index % 3) * 3}s`}></i>)}</div>
+      <div class="fire-field">{Array.from({ length: 16 }, (_, index) => <i style={`--x:${(index * 17 + 3) % 100}%;--delay:-${(index * .47).toFixed(2)}s;--duration:${2.8 + (index % 5) * .34}s;--drift:${(index % 5 - 2) * 24}px`}></i>)}</div>
+    </div>
+    <div class="pointer-crosshair" aria-hidden="true">
+      <span class="crosshair-line horizontal"></span>
+      <span class="crosshair-line vertical"></span>
+      <span class="crosshair-center"></span>
+    </div>
+    <header class="site-header">
+      <a class="wordmark" href={homeHref}>ORCA<span>_</span></a>
+      <nav aria-label={locale === 'en' ? 'Theme navigation' : '主题导航'}>
+        <a href="#mission">{copy.nav[0]}</a>
+        <a href="#profile">{copy.nav[1]}</a>
+        <a href="#showcase">{copy.nav[2]}</a>
+        <a href="#contact">{copy.nav[3]}</a>
+      </nav>
+      <div class="header-actions"><a href={languageHref}>{copy.language}</a><a class="back-link" href={homeHref}>{copy.back}</a></div>
+    </header>
+
+    <main class="mission-pages">
+      <section class="hero scene is-active" id="mission">
+        <div class="hero-grid" aria-hidden="true"></div>
+        <div class="hero-copy scene-reveal scene-title">
+          <p class="eyebrow">{copy.archive}</p>
+          <h1 set:html={copy.hero}></h1>
+          <p class="hero-summary">{copy.heroSummary}</p>
+          <a class="primary-action" href="#showcase">{copy.explore} <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="hero-data scene-reveal" aria-label="个人状态">
+          {copy.status.map((item, index) => <p><span>{String(index + 1).padStart(2, '0')}</span>{item}</p>)}
+        </div>
+        <p class="hero-index scene-reveal" aria-hidden="true">01</p>
+        <p class="scroll-note">{copy.scroll} <span></span></p>
+      </section>
+
+      <section class="manifesto scene">
+        <p class="section-label scene-reveal">{copy.brief}</p>
+        <div class="scene-reveal scene-title">
+          <p class="manifesto-lead" set:html={copy.lead}></p>
+          <p class="manifesto-copy">{copy.briefCopy}</p>
+        </div>
+      </section>
+
+      <section class="profile scene" id="profile">
+        <div class="profile-heading scene-reveal scene-title"><p class="section-label">{copy.profile}</p><h2 set:html={copy.profileTitle}></h2></div>
+        <div class="profile-body scene-reveal"><p>{copy.profileIntro}</p><div class="profile-cards">{copy.profileCards.map(([label, text], index) => <article style={`--item:${index}`}><span>{String(index + 1).padStart(2, '0')} / {label}</span><p>{text}</p></article>)}</div></div>
+      </section>
+
+      <section class="operations scene">
+        <div class="operations-heading scene-reveal scene-title"><p class="section-label">{copy.operations}</p><h2 set:html={copy.operationTitle}></h2></div>
+        <div class="operation-grid scene-reveal">{copy.operationsList.map(([label, value, description], index) => <article style={`--item:${index}`}><p>{String(index + 1).padStart(2, '0')} / {label}</p><h3>{value}</h3><span>{description}</span></article>)}</div>
+      </section>
+
+      <section class="showcase scene" id="showcase" aria-label={copy.showcaseLabel}>
+        <div class="showcase-heading scene-reveal">
+          <p class="section-label">{copy.showcase}</p>
+          <p><span data-current>01</span> / {String(works.length).padStart(2, '0')}</p>
+        </div>
+        <div class="screen-stage scene-reveal scene-title" data-screen-stage tabindex="0">
+          {works.map((work, index) => (
+            <article class:list={['screen', { 'is-active': index === 0 }]} data-screen aria-hidden={index === 0 ? 'false' : 'true'}>
+              <img src={work.image.src} alt={`${work.title} ${copy.imageSuffix}`} style={`object-position: ${work.position}`} />
+              <div class="screen-shade"></div>
+              <div class="screen-frame" aria-hidden="true"></div>
+              <div class="screen-copy">
+                <p>{work.type}</p>
+                <h2>{work.title}</h2>
+                <p class="screen-description">{work.description}</p>
+                {work.href && <a href={work.href} target="_blank" rel="noopener noreferrer">{copy.view} <span aria-hidden="true">↗</span></a>}
+              </div>
+              <p class="screen-number" aria-hidden="true">{work.number}</p>
+            </article>
+          ))}
+          <button class="screen-control previous" type="button" data-previous aria-label={copy.previous}>←</button>
+          <button class="screen-control next" type="button" data-next aria-label={copy.next}>→</button>
+        </div>
+        <div class="screen-footer scene-reveal">
+          <p>{copy.record}</p>
+          <div class="progress" aria-hidden="true"><span data-progress></span></div>
+          <p>{copy.navigate} <kbd>←</kbd> <kbd>→</kbd> {locale === 'en' ? 'TO NAVIGATE' : '切换作品'}</p>
+        </div>
+      </section>
+
+      <section class="contact scene" id="contact">
+        <p class="section-label scene-reveal">{copy.contact}</p>
+        <h2 class="scene-reveal scene-title" set:html={copy.contactTitle}></h2>
+        <a class="contact-action scene-reveal" href="mailto:584485321@qq.com">{copy.contactAction} <span aria-hidden="true">↗</span></a>
+        <p class="coordinate scene-reveal" set:html={copy.coordinate}></p>
+      </section>
+    </main>
+
+    <script>
+      const stage = document.querySelector<HTMLElement>('[data-screen-stage]');
+      if (stage) {
+        const screens = [...stage.querySelectorAll<HTMLElement>('[data-screen]')];
+        const current = document.querySelector<HTMLElement>('[data-current]');
+        const progress = document.querySelector<HTMLElement>('[data-progress]');
+        let activeIndex = 0;
+
+        const showScreen = (index: number) => {
+          activeIndex = (index + screens.length) % screens.length;
+          screens.forEach((screen, screenIndex) => {
+            const active = screenIndex === activeIndex;
+            screen.classList.toggle('is-active', active);
+            screen.setAttribute('aria-hidden', String(!active));
+          });
+          if (current) current.textContent = String(activeIndex + 1).padStart(2, '0');
+          if (progress) progress.style.transform = `scaleX(${(activeIndex + 1) / screens.length})`;
+        };
+
+        stage.querySelector('[data-previous]')?.addEventListener('click', () => showScreen(activeIndex - 1));
+        stage.querySelector('[data-next]')?.addEventListener('click', () => showScreen(activeIndex + 1));
+        stage.addEventListener('keydown', (event) => {
+          if (event.key === 'ArrowLeft') showScreen(activeIndex - 1);
+          if (event.key === 'ArrowRight') showScreen(activeIndex + 1);
+        });
+        showScreen(0);
+      }
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const scenes = [...document.querySelectorAll<HTMLElement>('.scene')];
+
+      if (!reducedMotion.matches && scenes.length) {
+        document.documentElement.classList.add('scene-motion');
+        let activeScene = scenes[0];
+
+        const activateScene = (nextScene: HTMLElement) => {
+          if (nextScene === activeScene) return;
+          const previousIndex = scenes.indexOf(activeScene);
+          const nextIndex = scenes.indexOf(nextScene);
+          activeScene.classList.remove('is-active');
+          activeScene.classList.toggle('is-exiting-forward', nextIndex > previousIndex);
+          activeScene.classList.toggle('is-exiting-backward', nextIndex < previousIndex);
+          nextScene.classList.remove('is-exiting-forward', 'is-exiting-backward');
+          nextScene.classList.add('is-active');
+          activeScene = nextScene;
+        };
+
+        const findCenteredScene = () => scenes.reduce<HTMLElement | undefined>((closest, scene) => {
+          if (!closest) return scene;
+          const viewportCenter = window.innerHeight / 2;
+          const sceneCenter = scene.getBoundingClientRect().top + scene.getBoundingClientRect().height / 2;
+          const closestCenter = closest.getBoundingClientRect().top + closest.getBoundingClientRect().height / 2;
+          return Math.abs(sceneCenter - viewportCenter) < Math.abs(closestCenter - viewportCenter) ? scene : closest;
+        }, undefined);
+
+        const observer = new IntersectionObserver(() => {
+          const centeredScene = findCenteredScene();
+          if (centeredScene) activateScene(centeredScene);
+        }, { threshold: [0.35, 0.6] });
+
+        scenes.forEach((scene) => observer.observe(scene));
+      }
+
+      const crosshair = document.querySelector<HTMLElement>('.pointer-crosshair');
+      const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+
+      if (crosshair && finePointer.matches && !reducedMotion.matches) {
+        let targetX = window.innerWidth / 2;
+        let targetY = window.innerHeight / 2;
+        let currentX = targetX;
+        let currentY = targetY;
+        let frameId: number | undefined;
+
+        const renderCrosshair = () => {
+          currentX += (targetX - currentX) * 0.28;
+          currentY += (targetY - currentY) * 0.28;
+          crosshair.style.setProperty('--pointer-x', `${currentX}px`);
+          crosshair.style.setProperty('--pointer-y', `${currentY}px`);
+          if (Math.abs(targetX - currentX) > 0.2 || Math.abs(targetY - currentY) > 0.2) {
+            frameId = requestAnimationFrame(renderCrosshair);
+          } else {
+            frameId = undefined;
+          }
+        };
+
+        window.addEventListener('pointermove', (event) => {
+          targetX = event.clientX;
+          targetY = event.clientY;
+          if (!frameId) frameId = requestAnimationFrame(renderCrosshair);
+        }, { passive: true });
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  :global(*) { box-sizing: border-box; }
+  :global(html) { scroll-behavior: smooth; scroll-snap-type: y proximity; scrollbar-width: none; -ms-overflow-style: none; background: #0a0d0e; }
+  :global(html::-webkit-scrollbar), :global(body::-webkit-scrollbar) { display: none; }
+  :global(body) { min-width: 320px; margin: 0; color: #edf0ea; background: #0a0d0e; font-family: 'Noto Sans SC', sans-serif; }
+  :global(a) { color: inherit; text-decoration: none; }
+  :global(button) { font: inherit; }
+  .atmosphere, .atmosphere::before, .atmosphere::after { position: fixed; inset: 0; pointer-events: none; }
+  .atmosphere { z-index: -1; overflow: hidden; background: radial-gradient(ellipse at 85% 0%, #2a3c40 0%, transparent 36%), linear-gradient(125deg, #131b1d, #090c0d 55%, #1a2425); }
+  .atmosphere::before { content: ''; opacity: .38; background: repeating-linear-gradient(90deg, transparent 0 80px, rgba(192, 218, 211, .045) 81px 82px), repeating-linear-gradient(0deg, transparent 0 80px, rgba(192, 218, 211, .045) 81px 82px); mask-image: linear-gradient(to bottom, #000, transparent 74%); }
+  .atmosphere::after { content: ''; opacity: .3; background: repeating-radial-gradient(ellipse at 35% 110%, rgba(188, 210, 202, .14) 0 1px, transparent 2px 17px); filter: blur(1px); }
+  .atmosphere span { position: absolute; border-radius: 50%; filter: blur(42px); mix-blend-mode: screen; animation: drift 15s ease-in-out infinite alternate; }
+  .atmosphere span:nth-child(1) { width: 60vw; height: 30vw; top: 18vh; left: -24vw; background: rgba(112, 146, 135, .18); }
+  .atmosphere span:nth-child(2) { width: 40vw; height: 50vw; top: 7vh; right: -19vw; background: rgba(74, 117, 132, .22); animation-delay: -4s; }
+  .atmosphere span:nth-child(3) { width: 30vw; height: 15vw; bottom: 2vh; left: 30vw; background: rgba(255, 98, 25, .13); animation-delay: -8s; }
+  .combat-effects { position: fixed; z-index: 3; inset: 0; overflow: hidden; pointer-events: none; }
+  .hero-copy, .hero-data, .hero-index, .scroll-note, .manifesto > *, .profile > *, .operations > *, .showcase > *, .contact > * { position: relative; z-index: 4; }
+  .bullet-trails i { position: absolute; top: var(--y); left: -18vw; width: clamp(90px, 16vw, 240px); height: 1px; opacity: 0; background: linear-gradient(90deg, transparent, rgba(255, 88, 25, .3) 30%, #ffb05a 86%, #fff2c2); box-shadow: 0 0 9px rgba(255, 103, 33, .72); transform: rotate(-12deg); animation: bullet-trail var(--duration) linear infinite; animation-delay: var(--delay); }
+  .smoke-field i { position: absolute; bottom: -12vw; left: var(--x); width: var(--size); height: var(--size); border-radius: 50%; opacity: 0; background: radial-gradient(circle, rgba(173, 190, 181, .12), rgba(103, 121, 115, .045) 46%, transparent 70%); filter: blur(18px); transform: translate3d(-50%, 0, 0); animation: smoke-rise var(--duration) ease-in-out infinite; animation-delay: var(--delay); }
+  .fire-field { position: absolute; right: 0; bottom: 0; left: 0; height: 22vh; opacity: .8; background: radial-gradient(ellipse at 12% 110%, rgba(255, 80, 18, .17), transparent 37%), radial-gradient(ellipse at 88% 112%, rgba(255, 121, 32, .11), transparent 30%); mix-blend-mode: screen; }
+  .fire-field i { position: absolute; bottom: -8px; left: var(--x); width: 3px; height: 3px; border-radius: 50%; opacity: 0; background: #ffd17a; box-shadow: 0 0 9px 2px #ef531d; animation: ember-rise var(--duration) linear infinite; animation-delay: var(--delay); }
+  .pointer-crosshair { --pointer-x: 50vw; --pointer-y: 50vh; position: fixed; z-index: 3; top: 0; left: 0; width: 1px; height: 1px; pointer-events: none; transform: translate3d(var(--pointer-x), var(--pointer-y), 0); }
+  .crosshair-line { position: absolute; display: block; filter: drop-shadow(0 0 4px rgba(166, 205, 191, .2)); }.crosshair-line.horizontal { top: 0; left: -43px; width: 86px; height: 1px; background: linear-gradient(to right, rgba(190, 209, 201, .5) 0 calc(50% - 11px), transparent calc(50% - 11px) calc(50% + 11px), rgba(190, 209, 201, .5) calc(50% + 11px) 100%); }.crosshair-line.vertical { top: -43px; left: 0; width: 1px; height: 86px; background: linear-gradient(to bottom, rgba(190, 209, 201, .5) 0 calc(50% - 11px), transparent calc(50% - 11px) calc(50% + 11px), rgba(190, 209, 201, .5) calc(50% + 11px) 100%); }.crosshair-center { position: absolute; top: -3px; left: -3px; width: 6px; height: 6px; border: 1px solid rgba(255, 226, 177, .9); border-radius: 50%; background: #ff6423; box-shadow: 0 0 0 3px rgba(255, 100, 35, .12), 0 0 12px rgba(255, 91, 25, .72); }.crosshair-center::after { content: ''; position: absolute; inset: 1px; border-radius: inherit; background: #fff2c2; }
+  .site-header { position: fixed; z-index: 10; top: 0; right: 0; left: 0; display: flex; align-items: center; justify-content: space-between; padding: 26px clamp(24px, 5vw, 72px); background: linear-gradient(#0a0d0e99, transparent); font-family: 'Barlow Condensed', sans-serif; font-weight: 600; letter-spacing: .12em; }
+  .wordmark { font-size: 27px; font-weight: 800; letter-spacing: .03em; }.wordmark span { color: #ff5e1b; }
+  nav, .header-actions { display: flex; align-items: center; gap: clamp(16px, 3vw, 42px); font-size: 14px; }.header-actions { gap: 17px; }.site-header a { transition: color .2s ease; }.site-header a:hover { color: #ff6a21; }
+  .back-link { padding-bottom: 4px; border-bottom: 1px solid #ff6a21; font-size: 13px; }
+  .hero { position: relative; display: flex; min-height: 100svh; align-items: flex-end; padding: 120px clamp(24px, 8vw, 150px) 90px; overflow: hidden; }
+  .mission-pages > section { scroll-snap-align: start; scroll-snap-stop: normal; }
+  :global(.scene-motion) .scene-reveal { opacity: 0; transform: translate3d(0, 28px, 0) scale(.985); transition: opacity 520ms ease, transform 760ms cubic-bezier(.16, 1, .3, 1), clip-path 860ms cubic-bezier(.16, 1, .3, 1); }
+  :global(.scene-motion) .scene-title { clip-path: inset(0 0 100% 0); transform: translate3d(0, 42px, 0) scale(.99); }
+  :global(.scene-motion) .scene.is-active .scene-reveal { opacity: 1; transform: none; }
+  :global(.scene-motion) .scene.is-active .scene-title { clip-path: inset(0 0 0 0); }
+  :global(.scene-motion) .scene.is-exiting-forward .scene-reveal { opacity: 0; transform: translate3d(0, -18px, 0) scale(.99); }
+  :global(.scene-motion) .scene.is-exiting-backward .scene-reveal { opacity: 0; transform: translate3d(0, 18px, 0) scale(.99); }
+  :global(.scene-motion) .hero-copy { transition-delay: 80ms; }:global(.scene-motion) .hero-data { transition-delay: 280ms; }:global(.scene-motion) .hero-index { transition-delay: 400ms; }
+  :global(.scene-motion) .manifesto > div, :global(.scene-motion) .profile-body, :global(.scene-motion) .operation-grid, :global(.scene-motion) .screen-stage { transition-delay: 180ms; }:global(.scene-motion) .screen-footer, :global(.scene-motion) .coordinate { transition-delay: 330ms; }:global(.scene-motion) .contact-action { transition-delay: 180ms; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(4, 8, 9, .86), rgba(7, 11, 12, .22) 70%), linear-gradient(0deg, rgba(3, 6, 7, .94), transparent 48%); }
+  .hero::after { content: ''; position: absolute; z-index: 0; top: 11%; right: 18%; width: 2px; height: 66vh; background: linear-gradient(transparent, #d8ebe1 18%, #ff5e1b 58%, transparent); box-shadow: 48px 25px 2px rgba(205, 230, 218, .38), 112px -48px 1px rgba(205, 230, 218, .28), -70px 90px 1px rgba(255, 94, 27, .4); transform: rotate(25deg) scaleY(.65); transform-origin: top; opacity: .15; transition: opacity 1.1s ease, transform 1.2s cubic-bezier(.16, 1, .3, 1); }.hero.is-active::after { opacity: .7; transform: rotate(25deg) scaleY(1); }
+  .hero-grid { position: absolute; inset: 0; opacity: .14; background: repeating-linear-gradient(90deg, transparent 0 11vw, rgba(168, 190, 184, .3) calc(11vw + 1px) calc(11vw + 2px)), repeating-linear-gradient(0deg, transparent 0 11vw, rgba(168, 190, 184, .24) calc(11vw + 1px) calc(11vw + 2px)); }.hero.is-active .hero-grid { animation: grid-scan 9s linear infinite; }
+  .hero-copy, .hero-data, .scroll-note { position: relative; z-index: 1; }.hero-copy { max-width: 800px; }
+  .eyebrow, .section-label, .hero-data, .screen-footer { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .13em; }.eyebrow { color: #ff6a21; }
+  h1, h2 { margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; }
+  h1 { margin: 13px 0 18px; font-size: clamp(76px, 11.2vw, 178px); line-height: .76; letter-spacing: -.045em; } h1 em, h2 em { color: #ff6a21; font-style: normal; }
+  .hero-summary { max-width: 410px; margin: 0 0 29px; font-size: clamp(16px, 1.6vw, 20px); font-weight: 500; letter-spacing: .06em; }
+  .primary-action, .contact-action { display: inline-flex; gap: 34px; align-items: center; padding: 15px 18px; color: #121516; background: #ff6423; font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: .1em; transition: background .2s, transform .2s; }.primary-action:hover, .contact-action:hover { background: #f0f2ea; transform: translateY(-3px); }
+  .hero-data { position: absolute; right: clamp(24px, 5vw, 72px); bottom: 87px; width: min(280px, 25vw); padding-left: 16px; border-left: 1px solid rgba(217, 231, 224, .45); color: #bdc9c4; }.hero-data p { margin: 0 0 10px; }.hero-data span { display: inline-block; width: 28px; color: #ff6423; }
+  .hero-index { position: absolute; right: clamp(24px, 5vw, 72px); top: 18%; z-index: 1; margin: 0; color: rgba(232, 241, 235, .14); font: 800 clamp(150px, 22vw, 340px)/.7 'Barlow Condensed', sans-serif; }.scroll-note { position: absolute; bottom: 25px; left: clamp(24px, 5vw, 72px); display: flex; gap: 10px; align-items: center; font: 10px 'IBM Plex Mono', monospace; letter-spacing: .13em; }.scroll-note span { display: inline-block; width: 70px; height: 1px; background: #ff6423; }
+  .manifesto { display: grid; min-height: 100svh; align-content: center; grid-template-columns: minmax(180px, .6fr) 2fr; gap: 35px; max-width: 1400px; margin: 0 auto; padding: clamp(100px, 14vw, 190px) clamp(24px, 8vw, 150px); }.section-label { margin: 0; color: #ff6423; }.manifesto-lead { margin: -8px 0 38px; font: 700 clamp(38px, 5.4vw, 84px)/.9 'Barlow Condensed', sans-serif; letter-spacing: -.025em; }.manifesto-copy { max-width: 520px; margin: 0; color: #aebcb6; line-height: 1.9; }
+  .profile, .operations { min-height: 100svh; max-width: 1400px; margin: 0 auto; padding: clamp(90px, 11vw, 150px) clamp(24px, 8vw, 150px); border-top: 1px solid rgba(195, 212, 204, .18); }.profile { display: grid; align-content: center; grid-template-columns: minmax(260px, .9fr) 1.5fr; gap: clamp(45px, 9vw, 145px); }.profile-heading h2, .operations-heading h2 { margin-top: 23px; font-size: clamp(55px, 7vw, 108px); line-height: .78; letter-spacing: -.045em; }.profile-body > p { max-width: 560px; margin: 0 0 52px; color: #c6d0cb; font-size: clamp(17px, 1.6vw, 22px); font-weight: 500; line-height: 1.65; }.profile-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(195, 212, 204, .18); }.profile-cards article { min-height: 188px; padding: 20px; background: #101516; }.profile-cards span, .operation-grid article > p { color: #ff6423; font: 10px 'IBM Plex Mono', monospace; letter-spacing: .1em; }.profile-cards p { margin: 42px 0 0; color: #aebbb5; font-size: 13px; line-height: 1.75; }
+  :global(.scene-motion) .profile-cards article, :global(.scene-motion) .operation-grid article { opacity: 0; transform: translateX(-18px); transition: opacity 430ms ease calc(280ms + var(--item) * 110ms), transform 620ms cubic-bezier(.16, 1, .3, 1) calc(280ms + var(--item) * 110ms), box-shadow 620ms ease calc(280ms + var(--item) * 110ms); }:global(.scene-motion) .scene.is-active .profile-cards article, :global(.scene-motion) .scene.is-active .operation-grid article { opacity: 1; transform: none; }:global(.scene-motion) .scene.is-active .profile-cards article { box-shadow: inset 0 1px 0 rgba(255, 100, 35, .45); }
+  .operations { display: grid; align-content: center; grid-template-columns: minmax(245px, .8fr) 1.6fr; gap: clamp(45px, 9vw, 145px); background: linear-gradient(90deg, rgba(36, 53, 53, .38), transparent 58%); }.operation-grid { align-self: end; }.operation-grid article { display: grid; grid-template-columns: .8fr 1fr 1.25fr; gap: 20px; align-items: baseline; padding: 22px 0; border-top: 1px solid rgba(195, 212, 204, .2); }.operation-grid article:last-child { border-bottom: 1px solid rgba(195, 212, 204, .2); }.operation-grid article > p { margin: 0; }.operation-grid h3 { margin: 0; font: 600 clamp(24px, 2.6vw, 40px)/1 'Barlow Condensed', sans-serif; letter-spacing: -.015em; }.operation-grid span { color: #9eada7; font-size: 13px; line-height: 1.5; }.operations.is-active .operation-grid::after { content: ''; display: block; height: 1px; background: #ff6423; animation: status-scan 1.2s cubic-bezier(.16, 1, .3, 1); transform-origin: left; }
+  .showcase { display: flex; min-height: 100svh; flex-direction: column; justify-content: center; padding: 90px clamp(24px, 5vw, 72px) 54px; }.showcase-heading, .screen-footer { display: flex; align-items: center; justify-content: space-between; max-width: 1440px; margin: 0 auto 18px; }.showcase-heading > p:last-child { margin: 0; color: #9ca9a4; font: 500 12px 'IBM Plex Mono', monospace; }.showcase-heading span { color: #ff6423; }
+  .screen-stage { position: relative; max-width: 1440px; aspect-ratio: 16 / 8.2; margin: auto; overflow: hidden; background: #040606; outline: none; box-shadow: 0 26px 70px rgba(0, 0, 0, .5); }.screen { position: absolute; inset: 0; visibility: hidden; opacity: 0; transition: opacity .55s ease, visibility 0s linear .55s; }.screen.is-active { visibility: visible; opacity: 1; transition: opacity .55s ease; }.screen > img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.65) contrast(1.08) brightness(.72); transform: scale(1.045); transition: transform 7s ease-out; }.screen.is-active > img { transform: scale(1); }.screen-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(3, 7, 8, .9), transparent 66%), linear-gradient(0deg, rgba(3, 7, 8, .8), transparent 44%); }.screen-frame { position: absolute; inset: 16px; border: 1px solid rgba(232, 240, 234, .32); }.screen-frame::before, .screen-frame::after { content: ''; position: absolute; width: 54px; height: 54px; border-color: #ff6423; }.screen-frame::before { top: -1px; left: -1px; border-top: 2px solid; border-left: 2px solid; }.screen-frame::after { right: -1px; bottom: -1px; border-right: 2px solid; border-bottom: 2px solid; }
+  .screen-copy { position: absolute; z-index: 1; bottom: clamp(36px, 6vw, 88px); left: clamp(34px, 6vw, 90px); max-width: min(470px, 58%); }.screen-copy > p:first-child { margin: 0 0 10px; color: #ff6a21; font: 10px 'IBM Plex Mono', monospace; letter-spacing: .12em; }.screen-copy h2 { font-size: clamp(48px, 7vw, 105px); line-height: .78; letter-spacing: -.035em; }.screen-description { margin: 17px 0; color: #ccd5d0; font-size: 14px; line-height: 1.7; }.screen-copy a { display: inline-block; padding-bottom: 5px; border-bottom: 1px solid #ff6423; font: 600 13px 'Barlow Condensed', sans-serif; letter-spacing: .1em; }.screen-number { position: absolute; top: 40px; right: clamp(34px, 5vw, 74px); margin: 0; color: rgba(237, 241, 235, .75); font: 600 18px 'IBM Plex Mono', monospace; }.screen-control { position: absolute; z-index: 3; top: 50%; display: grid; width: 48px; height: 70px; place-items: center; border: 0; color: #eaf0ec; background: rgba(5, 9, 10, .56); font-size: 24px; cursor: pointer; transform: translateY(-50%); transition: background .2s, color .2s; }.screen-control:hover, .screen-control:focus-visible { color: #101313; background: #ff6423; }.previous { left: 0; }.next { right: 0; }
+  .screen-footer { margin-top: 18px; color: #82908b; }.progress { width: min(42vw, 500px); height: 2px; overflow: hidden; background: #293130; }.progress span { display: block; width: 100%; height: 100%; background: #ff6423; transform-origin: left; transition: transform .4s ease; } kbd { padding: 1px 3px; border: 1px solid #60706b; font: inherit; }
+  .contact { position: relative; display: flex; min-height: 100svh; flex-direction: column; justify-content: center; padding: clamp(105px, 15vw, 210px) clamp(24px, 8vw, 150px) 80px; overflow: hidden; background: #e7ede8; color: #101616; }.contact::before { content: '05'; position: absolute; right: -1vw; bottom: -7vw; color: rgba(19, 29, 28, .06); font: 800 48vw/.7 'Barlow Condensed', sans-serif; }.contact h2 { position: relative; margin: 21px 0 40px; font-size: clamp(64px, 10vw, 158px); line-height: .78; letter-spacing: -.045em; }.coordinate { position: relative; margin: 75px 0 0; color: #53605c; font: 10px/1.7 'IBM Plex Mono', monospace; letter-spacing: .14em; }
+  @keyframes drift { to { transform: translate3d(8vw, -4vh, 0) scale(1.14); } }
+  @keyframes bullet-trail { 0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-12deg) scaleX(.3); } 8% { opacity: .92; } 19% { opacity: 0; transform: translate3d(125vw, -14vh, 0) rotate(-12deg) scaleX(1); } 100% { opacity: 0; } }
+  @keyframes smoke-rise { 0% { opacity: 0; transform: translate3d(-50%, 4vw, 0) scale(.5); } 22% { opacity: .56; } 82% { opacity: .08; } 100% { opacity: 0; transform: translate3d(calc(-50% + 6vw), -96vh, 0) scale(1.65); } }
+  @keyframes ember-rise { 0% { opacity: 0; transform: translate3d(0, 0, 0) scale(.4); } 16% { opacity: .9; } 100% { opacity: 0; transform: translate3d(var(--drift), -26vh, 0) scale(1.2); } }
+  @keyframes grid-scan { 50% { transform: translate3d(1.5%, -1.5%, 0); opacity: .28; } }
+  @keyframes status-scan { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @media (max-width: 720px) { :global(html) { scroll-snap-type: none; }.pointer-crosshair { display: none; }.site-header { padding: 20px 22px; }.site-header nav { display: none; }.header-actions { gap: 12px; font-size: 11px; }.back-link { font-size: 11px; }.hero { min-height: 760px; padding: 120px 24px 72px; }.hero-data { right: 24px; bottom: 78px; width: 220px; }.hero-index { top: 22%; right: 15px; }.manifesto, .profile, .operations { min-height: 0; grid-template-columns: 1fr; padding: 90px 24px; }.manifesto-lead { margin-top: 0; }.profile { gap: 44px; }.profile-cards { grid-template-columns: 1fr; }.profile-cards article { min-height: auto; }.profile-cards p { margin-top: 20px; }.operations { gap: 50px; }.operation-grid article { grid-template-columns: 1fr; gap: 8px; }.showcase { min-height: 0; padding: 92px 16px 94px; }.screen-stage { aspect-ratio: 4 / 5.6; }.screen-frame { inset: 9px; }.screen-copy { right: 28px; bottom: 35px; left: 28px; max-width: none; }.screen-description { font-size: 13px; }.screen-number { top: 26px; right: 27px; }.screen-control { top: auto; bottom: 0; width: 50px; height: 44px; transform: none; }.previous { right: 50px; left: auto; }.screen-footer p:last-child { display: none; }.progress { width: 48vw; }.contact { min-height: 0; padding: 100px 24px 54px; }.contact h2 { font-size: clamp(59px, 18vw, 100px); }.atmosphere span:nth-child(1) { width: 100vw; }.atmosphere span:nth-child(2) { width: 80vw; } }
+  @media (prefers-reduced-motion: reduce) { :global(html) { scroll-behavior: auto; scroll-snap-type: none; }.pointer-crosshair { display: none; }.atmosphere span, .hero-grid, .operations.is-active .operation-grid::after, .bullet-trails i, .smoke-field i, .fire-field i { animation: none; }.bullet-trails i, .smoke-field i, .fire-field i { opacity: 0; }.screen, .screen > img, .progress span, .hero::after { transition: none; } }
+</style>

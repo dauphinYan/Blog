@@ -41,7 +41,7 @@ export const translations = {
       tags: ['Unreal Engine', '探索', '迷宫', '角色扮演'], tagsLabel: '项目标签', screenshotsLabel: '洛克的迷宫游戏截图',
       previousScreenshot: '上一张游戏截图', nextScreenshot: '下一张游戏截图', paginationLabel: '游戏截图分页', screenshotGoTo: ['查看第 1 张游戏截图', '查看第 2 张游戏截图', '查看第 3 张游戏截图'],
       screenshotAlts: ['洛克的迷宫提灯封面画面', '洛克的迷宫室内探索画面', '洛克的迷宫主菜单画面'],
-      seerKicker: '02 / 桌面工具', seerScreenshotAlt: '赛尔号记牌器软件界面截图', previousWork: '上一个作品', nextWork: '下一个作品',
+      seerKicker: '02 / 桌面工具', seerScreenshotAlt: '赛尔号记牌器软件界面截图', workNavigationLabel: '作品切换导航', previousWork: '上一个作品', nextWork: '下一个作品',
     },
     animeFeature: {
       label: '动漫', tagsLabel: '动漫标签', cardStageLabel: '名侦探柯南画面卡片', previous: '上一部动漫', next: '下一部动漫',
@@ -92,7 +92,7 @@ export const translations = {
       tags: ['Unreal Engine', 'Exploration', 'Maze', 'Role-playing'], tagsLabel: 'Project tags', screenshotsLabel: 'Lock Knock Maze screenshots',
       previousScreenshot: 'Previous screenshot', nextScreenshot: 'Next screenshot', paginationLabel: 'Screenshot pagination', screenshotGoTo: ['View screenshot 1', 'View screenshot 2', 'View screenshot 3'],
       screenshotAlts: ['Lock Knock Maze lantern cover', 'Lock Knock Maze interior exploration', 'Lock Knock Maze main menu'],
-      seerKicker: '02 / DESKTOP TOOL', seerScreenshotAlt: 'Seer Card Tracker interface screenshot', previousWork: 'Previous work', nextWork: 'Next work',
+      seerKicker: '02 / DESKTOP TOOL', seerScreenshotAlt: 'Seer Card Tracker interface screenshot', workNavigationLabel: 'Project navigation', previousWork: 'Previous work', nextWork: 'Next work',
     },
     animeFeature: {
       label: 'Anime', tagsLabel: 'Anime tags', cardStageLabel: 'Detective Conan scene cards', previous: 'Previous anime', next: 'Next anime',
