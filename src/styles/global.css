@@ -199,6 +199,11 @@ button {
   background: rgba(243, 185, 103, 0.14);
 }
 
+html.navigation-locked,
+html.navigation-locked body {
+  overflow: hidden;
+}
+
 .top-nav[data-surface="ember"] .mobile-menu-btn span {
   background: #f8e5c5;
 }
@@ -850,9 +855,12 @@ button {
 }
 
 .animate-fade-up {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.motion-ready .animate-fade-up {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .slide.is-entering-backward .animate-fade-up {
@@ -903,6 +911,7 @@ button {
 @media (max-width: 768px) {
   html {
     scroll-snap-type: none;
+    overscroll-behavior-y: none;
   }
 
   :root {
@@ -929,8 +938,19 @@ button {
   }
 
   .hero-band {
-    min-height: auto;
-    padding-top: calc(64px + 64px);
+    min-height: 100svh;
+    min-height: 100dvh;
+    padding-top: calc(64px + 48px);
+    padding-bottom: 48px;
+  }
+
+  .section.slide:not(.hero-band) {
+    min-height: 100svh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    padding-top: calc(64px + 40px);
+    padding-bottom: 40px;
   }
 
   .intro-block {

@@ -33,20 +33,29 @@ const { title, description, locale } = Astro.props;
     <script>
       const slides = [...document.querySelectorAll<HTMLElement>('.slide[id]')];
       let activeSlide: HTMLElement | undefined;
+      let scrollFrame = 0;
+      let navigationTimer = 0;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-      const activateSlide = (nextSlide: HTMLElement) => {
+      const activateSlide = (nextSlide: HTMLElement, animate = true) => {
         if (nextSlide === activeSlide) return;
 
         const direction = activeSlide && nextSlide.offsetTop < activeSlide.offsetTop ? 'backward' : 'forward';
 
         if (activeSlide) {
           activeSlide.classList.remove('is-active', 'is-entering-forward', 'is-entering-backward');
-          activeSlide.classList.add(`is-exiting-${direction}`);
+          if (animate) activeSlide.classList.add(`is-exiting-${direction}`);
         }
 
         nextSlide.classList.remove('is-exiting-forward', 'is-exiting-backward', 'is-active');
-        nextSlide.classList.add(`is-entering-${direction}`);
+        if (activeSlide && animate) nextSlide.classList.add(`is-entering-${direction}`);
         activeSlide = nextSlide;
+
+        if (!animate) {
+          nextSlide.classList.add('is-active');
+          document.dispatchEvent(new CustomEvent('slidechange', { detail: { id: nextSlide.id } }));
+          return;
+        }
 
         requestAnimationFrame(() => {
           if (activeSlide !== nextSlide) return;
@@ -58,27 +67,116 @@ const { title, description, locale } = Astro.props;
 
       const findCenteredSlide = () => {
         const viewportCenter = window.innerHeight / 2;
-        return slides.reduce<HTMLElement | undefined>((closest, slide) => {
+        return slides.find((slide) => {
+          const bounds = slide.getBoundingClientRect();
+          return bounds.top <= viewportCenter && bounds.bottom > viewportCenter;
+        }) ?? slides.reduce<HTMLElement | undefined>((closest, slide) => {
           if (!closest) return slide;
-          const slideCenter = slide.getBoundingClientRect().top + slide.getBoundingClientRect().height / 2;
-          const closestCenter = closest.getBoundingClientRect().top + closest.getBoundingClientRect().height / 2;
-          return Math.abs(slideCenter - viewportCenter) < Math.abs(closestCenter - viewportCenter) ? slide : closest;
+          return Math.abs(slide.getBoundingClientRect().top) < Math.abs(closest.getBoundingClientRect().top) ? slide : closest;
         }, undefined);
       };
 
-      if ('IntersectionObserver' in window && slides.length) {
-        const observer = new IntersectionObserver(
-          () => {
-            const centeredSlide = findCenteredSlide();
-            if (centeredSlide) activateSlide(centeredSlide);
-          },
-          { threshold: [0.5] },
-        );
+      const syncActiveSlide = () => {
+        scrollFrame = 0;
+        if (document.documentElement.classList.contains('is-slide-navigating')) return;
+        const centeredSlide = findCenteredSlide();
+        if (centeredSlide) activateSlide(centeredSlide);
+      };
 
-        slides.forEach((slide) => observer.observe(slide));
-      } else {
-        slides.forEach((slide) => slide.classList.add('is-active'));
-      }
+      const requestActiveSlideSync = () => {
+        if (!scrollFrame) scrollFrame = requestAnimationFrame(syncActiveSlide);
+      };
+
+      const navigateToSlide = (slide: HTMLElement, updateHash = true) => {
+        window.clearTimeout(navigationTimer);
+        document.documentElement.classList.add('is-slide-navigating');
+        activateSlide(slide);
+        slide.scrollIntoView({ behavior: reducedMotion.matches ? 'auto' : 'smooth', block: 'start' });
+        if (updateHash && location.hash !== `#${slide.id}`) history.pushState(null, '', `#${slide.id}`);
+        navigationTimer = window.setTimeout(() => {
+          document.documentElement.classList.remove('is-slide-navigating');
+          requestActiveSlideSync();
+        }, reducedMotion.matches ? 0 : 550);
+      };
+
+      const initialSlide = document.getElementById(location.hash.slice(1)) as HTMLElement | null;
+      activateSlide(initialSlide?.classList.contains('slide') ? initialSlide : (findCenteredSlide() ?? slides[0]), false);
+      if (!reducedMotion.matches) document.documentElement.classList.add('motion-ready');
+
+      document.addEventListener('click', (event) => {
+        const link = (event.target as Element | null)?.closest<HTMLAnchorElement>('a[href^="#"]');
+        const id = link?.hash.slice(1);
+        const target = id ? document.getElementById(id) : null;
+        if (!target?.classList.contains('slide')) return;
+        event.preventDefault();
+        navigateToSlide(target);
+      });
+
+      window.addEventListener('popstate', () => {
+        const target = document.getElementById(location.hash.slice(1));
+        if (target?.classList.contains('slide')) navigateToSlide(target, false);
+      });
+      window.addEventListener('scroll', requestActiveSlideSync, { passive: true });
+      window.addEventListener('resize', requestActiveSlideSync);
+      window.visualViewport?.addEventListener('resize', requestActiveSlideSync);
+
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchSlide: HTMLElement | undefined;
+      let touchAxis: 'pending' | 'horizontal' | 'vertical' = 'pending';
+
+      const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+      const isScrollableSlide = (slide: HTMLElement) => slide.scrollHeight > window.innerHeight + 2;
+      const canScrollWithinSlide = (slide: HTMLElement, direction: number) => {
+        if (!isScrollableSlide(slide)) return false;
+        const bounds = slide.getBoundingClientRect();
+        return direction > 0 ? bounds.bottom > window.innerHeight + 2 : bounds.top < -2;
+      };
+      const resetTouch = () => {
+        touchSlide = undefined;
+        touchAxis = 'pending';
+      };
+
+      document.addEventListener('touchstart', (event) => {
+        if (!isMobile() || event.touches.length !== 1 || document.documentElement.classList.contains('navigation-locked')) return;
+        touchStartX = event.touches[0]?.clientX ?? 0;
+        touchStartY = event.touches[0]?.clientY ?? 0;
+        touchSlide = findCenteredSlide();
+        touchAxis = 'pending';
+      }, { passive: true });
+
+      document.addEventListener('touchmove', (event) => {
+        if (!touchSlide || event.touches.length !== 1) return;
+        const distanceX = (event.touches[0]?.clientX ?? touchStartX) - touchStartX;
+        const distanceY = (event.touches[0]?.clientY ?? touchStartY) - touchStartY;
+        if (touchAxis === 'pending' && Math.max(Math.abs(distanceX), Math.abs(distanceY)) > 10) {
+          touchAxis = Math.abs(distanceX) > Math.abs(distanceY) * 1.2 ? 'horizontal' : 'vertical';
+        }
+        if (touchAxis === 'vertical' && !isScrollableSlide(touchSlide)) event.preventDefault();
+      }, { passive: false });
+
+      document.addEventListener('touchend', (event) => {
+        if (!touchSlide) return;
+        const startSlide = touchSlide;
+        const gestureAxis = touchAxis;
+        const distanceX = (event.changedTouches[0]?.clientX ?? touchStartX) - touchStartX;
+        const distanceY = (event.changedTouches[0]?.clientY ?? touchStartY) - touchStartY;
+        resetTouch();
+        if (gestureAxis === 'horizontal' || Math.abs(distanceY) <= Math.abs(distanceX) * 1.2) return;
+
+        const threshold = Math.min(120, Math.max(72, window.innerHeight * 0.12));
+        const direction = distanceY < 0 ? 1 : -1;
+        if (Math.abs(distanceY) < threshold || canScrollWithinSlide(startSlide, direction)) {
+          if (!isScrollableSlide(startSlide)) navigateToSlide(startSlide, false);
+          return;
+        }
+
+        const currentIndex = slides.indexOf(startSlide);
+        const nextSlide = slides[currentIndex + direction];
+        if (nextSlide) navigateToSlide(nextSlide);
+        else navigateToSlide(startSlide, false);
+      }, { passive: true });
+      document.addEventListener('touchcancel', resetTouch, { passive: true });
     </script>
   </body>
 </html>

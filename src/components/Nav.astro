@@ -98,6 +98,7 @@ const navItems = navSlides.map((slide) => ({ href: `#${slide.id}`, label: conten
     menuButton?.classList.remove('active');
     menuButton?.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
+    document.documentElement.classList.remove('navigation-locked');
   };
 
   menuButton?.addEventListener('click', () => {
@@ -105,19 +106,18 @@ const navItems = navSlides.map((slide) => ({ href: `#${slide.id}`, label: conten
     menuButton.classList.toggle('active', isOpen);
     menuButton.setAttribute('aria-expanded', String(isOpen));
     document.body.style.overflow = isOpen ? 'hidden' : '';
+    document.documentElement.classList.toggle('navigation-locked', isOpen);
   });
 
   navLinks.forEach((link) => {
-    link.addEventListener('click', (event) => {
+    link.addEventListener('click', () => {
       const href = link.getAttribute('href');
       if (!href?.startsWith('#')) return;
 
       const target = document.querySelector(href);
       if (!target) return;
 
-      event.preventDefault();
       closeMenu();
-       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
 

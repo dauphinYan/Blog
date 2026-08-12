@@ -18,7 +18,7 @@ const cards = [
 ---
 
 <section id="anime" class="anime-slide slide" aria-label="动漫" data-i18n-aria-label="animeFeature.label">
-  <div class="anime-carousel" data-anime-carousel tabindex="0">
+  <div class="anime-carousel" data-anime-carousel data-gesture-axis="horizontal" tabindex="0">
     {profile.anime.map((anime, animeIndex) => (
       <article class:list={['anime-panel', { 'is-active': animeIndex === 0 }]} data-anime-panel aria-hidden={animeIndex === 0 ? 'false' : 'true'}>
         <div class="anime-copy">
@@ -69,6 +69,7 @@ const cards = [
     let currentAnimeIndex = 0;
     let timer: number | undefined;
     let touchStartX = 0;
+    let touchStartY = 0;
 
     const showAnime = (nextIndex: number) => {
       currentAnimeIndex = (nextIndex + panels.length) % panels.length;
@@ -135,11 +136,13 @@ const cards = [
     });
     carousel.addEventListener('touchstart', (event) => {
       touchStartX = event.changedTouches[0]?.clientX ?? 0;
+      touchStartY = event.changedTouches[0]?.clientY ?? 0;
       stopAutoplay();
     }, { passive: true });
     carousel.addEventListener('touchend', (event) => {
       const distance = (event.changedTouches[0]?.clientX ?? touchStartX) - touchStartX;
-      if (panels.length > 1 && Math.abs(distance) > 48) moveAnime(distance > 0 ? -1 : 1);
+      const verticalDistance = (event.changedTouches[0]?.clientY ?? touchStartY) - touchStartY;
+      if (panels.length > 1 && Math.abs(distance) > 48 && Math.abs(distance) > Math.abs(verticalDistance) * 1.2) moveAnime(distance > 0 ? -1 : 1);
       else startAutoplay();
     }, { passive: true });
     document.addEventListener('visibilitychange', () => document.hidden ? stopAutoplay() : startAutoplay());
@@ -160,7 +163,7 @@ const cards = [
   .anime-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
   .anime-tags span { padding: 6px 10px; border: 1px solid var(--hairline); color: var(--body); font-size: 12px; letter-spacing: .08em; }
   .anime-card-stage { position: relative; width: min(100%, 500px); height: clamp(430px, 43vw, 620px); justify-self: center; }
-  .anime-copy, .anime-card-stage { opacity: 0; }
+  :global(.motion-ready) .anime-copy, :global(.motion-ready) .anime-card-stage { opacity: 0; }
   .anime-slide.is-active .anime-copy { animation: anime-enter-up 480ms ease both; }
   .anime-slide.is-active .anime-card-stage { animation: anime-enter-up 560ms ease 120ms both; }
   .anime-slide.is-exiting-forward .anime-copy, .anime-slide.is-exiting-forward .anime-card-stage { animation: anime-exit-up 320ms ease both; }
@@ -187,7 +190,7 @@ const cards = [
     .anime-card-stage { height: clamp(390px, 48vw, 500px); }
   }
   @media (max-width: 768px) {
-    .anime-panel { display: block; width: min(100% - 48px, 560px); min-height: max(900px, 100svh); padding: 108px 0 86px; }
+    .anime-panel { display: block; width: min(100% - 48px, 560px); min-height: 100svh; min-height: 100dvh; padding: 108px 0 86px; }
     .anime-copy h2 { font-size: clamp(48px, 14vw, 68px); }
     .anime-description { margin-top: 20px; }
     .anime-card-stage { width: min(100%, 430px); height: min(92vw, 500px); margin: 42px auto 0; }
