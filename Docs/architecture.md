@@ -16,13 +16,15 @@
 
 ## Blog Content
 
-`src/content.config.ts` defines the `blog` content collection with Astro's file glob loader. Every Markdown file in `src/content/blog` supplies a title, description, publication date, tags, and optional `draft` flag through frontmatter. `src/pages/blog/[slug].astro` filters drafts, statically generates one route per published file, and renders the Markdown body. The homepage reads the same collection, showing up to four published articles; `src/data/blog.ts` provides placeholders for empty slots.
+`src/content.config.ts` defines the `blog` content collection with Astro's file glob loader. Every Markdown file in `src/content/blog` supplies a title, description, publication date, tags, and optional `draft` flag through frontmatter. `src/pages/blog/[slug].astro` filters drafts, statically generates one route per published file, and renders the Markdown body. The homepage reads the same collection, showing up to four published articles; `src/data/blog.ts` provides placeholders for empty slots. The first published article, `first-devlog.md`, is a security-conscious Flash client and TCP protocol reading note; it documents message framing and engineering lessons without publishing credential, key-derivation, injection, or game-manipulation instructions.
 
 Create an article by copying `src/content/blog/TEMPLATE.md`, renaming it to an English hyphenated slug, filling out the frontmatter, then removing `draft: true`. This keeps unpublished templates out of both the homepage and generated routes.
 
 ## Theme System
 
-`src/styles/global.css` defines the shared surface, text, border, decoration, and shadow tokens. The `prefers-color-scheme: dark` media query replaces those tokens with a low-luminance paper surface, high-contrast text, and translucent light dividers; page-specific styles consume the same tokens. `index.astro` provides matching light and dark browser theme-color metadata.
+`src/styles/global.css` defines the shared surface, text, border, decoration, shadow, and code-surface tokens. The `prefers-color-scheme: dark` media query replaces those tokens with a low-luminance paper surface, high-contrast text, and translucent light dividers; page-specific styles consume the same tokens. `index.astro` provides matching light and dark browser theme-color metadata.
+
+`astro.config.mjs` configures Shiki with GitHub light and dark themes, emitting CSS custom properties rather than fixed inline colors. It preloads common native, web, configuration, shell, and database grammars, and normalizes familiar fence aliases such as `c++`, `c#`, `sh`, and `yml`. `src/styles/blog.css` applies the corresponding code-surface tokens and a Console-style font stack (`Consolas`, `Cascadia Mono`, `Courier New`) to both inline and fenced code, switching Shiki token colors with the system theme. Token color rules select only Shiki's custom-property output; legacy single dark-theme output maps its GitHub token palette to contrasting light-theme equivalents only in light mode, retaining the original light tokens in dark mode. It also defines the Markdown reading surface: heading hierarchy, marked lists, highlighted links, callout blockquotes, accented rules, horizontally scrollable tables, and responsive images. These rules are scoped under `.article-body` so they do not affect the homepage.
 
 ## Image Delivery
 
