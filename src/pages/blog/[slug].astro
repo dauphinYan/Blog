@@ -1,0 +1,47 @@
+---
+import '../../styles/global.css';
+import '../../styles/blog.css';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map(post => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const publishedDate = post.data.publishedAt.toLocaleDateString('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={post.data.description} />
+    <meta name="theme-color" content="#f7f6f0" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171a16" media="(prefers-color-scheme: dark)" />
+    <title>{post.data.title} - Orca丶的博客</title>
+  </head>
+  <body>
+    <header><div class="nav-inner"><nav aria-label="文章导航"><a href="/">首页</a></nav></div></header>
+    <main class="blog-page">
+      <article class="blog-post">
+        <a class="back-link" href="/#blog">← 返回博客列表</a>
+        <p class="post-eyebrow">{post.data.tags[0] ?? 'DEVLOG'} / {publishedDate}</p>
+        <h1>{post.data.title}</h1>
+        <p class="post-description">{post.data.description}</p>
+        {post.data.tags.length > 0 && <ul class="post-tags" aria-label="文章标签">{post.data.tags.map(tag => <li>{tag}</li>)}</ul>}
+        <div class="article-body"><Content /></div>
+      </article>
+    </main>
+    <footer class="blog-footer"><a href="/">Orca丶</a><span>把想法，变成可玩的世界。</span></footer>
+  </body>
+</html>

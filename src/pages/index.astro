@@ -4,27 +4,38 @@ import '../styles/portfolio.css';
 import Icon from '../components/Icon.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { profile, projects } from '../data/portfolio';
-import unrealIcon from '../../assets/Icon/Unreal.png';
-import cppIcon from '../../assets/Icon/C++.png';
-const skills = [ { name: 'Unreal Engine', icon: unrealIcon }, { name: 'C++', icon: cppIcon }, { name: '其他', icon: 'tools' } ];
+import { blogPlaceholders } from '../data/blog';
+import { getCollection } from 'astro:content';
+import unrealIcon from '../assets/icons/unreal.png?url';
+// Legacy source images lack metadata that Astro can decode, so retain bundled URLs.
+import cppIcon from '../assets/icons/cpp.png?url';
+const skills = [
+  { name: 'Unreal Engine', image: unrealIcon, icon: null },
+  { name: 'C++', image: cppIcon, icon: null },
+  { name: '其他', image: null, icon: 'tools' },
+];
+const blogPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+const remainingBlogCards = Math.max(0, 4 - blogPosts.length);
 
 ---
 <!doctype html>
 <html lang="zh-CN">
   <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="description" content="Orca丶 的独立游戏开发作品集。Unreal Engine、C++、游戏设计，把想法变成可玩的世界。" /><meta name="theme-color" content="#f7f6f0" media="(prefers-color-scheme: light)" /><meta name="theme-color" content="#171a16" media="(prefers-color-scheme: dark)" /><link rel="preload" href="/hero-art.webp" as="image" type="image/webp" /><title>Orca丶 — 把想法，变成可玩的世界</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23c1ff00'/%3E%3Ctext x='10' y='50' font-size='50' font-family='Arial' font-weight='900'%3EO%3C/text%3E%3C/svg%3E" /></head>
  <body>
-  <header><div class="nav-inner"><nav aria-label="主导航"><a href="#home" class="active">首页</a><a href="#projects">项目</a><a href="#about">关于</a><a href="#contact">联系</a></nav></div></header>
+   <header><div class="nav-inner"><nav aria-label="主导航"><a href="#home" class="active">首页</a><a href="#projects">项目</a><a href="#blog">博客</a><a href="#about">关于</a><a href="#contact">联系</a></nav></div></header>
   <main>
    <section id="home" class="hero"><div class="hero-art" aria-hidden="true"></div><div class="hero-copy"><h1><span class="hello">你好，我是</span><span class="name">Orca丶</span></h1><p class="profession">Unreal Engine / C++ / 游戏开发</p><p class="tagline">把想法，变成可玩的世界。</p></div><span class="hero-spark" aria-hidden="true">✦</span></section>
-   <section id="skills" class="content-row skills"><div class="section-title"><h2>技能<span>′</span></h2><p>SKILLS <b>↗</b></p></div><div class="skill-grid">{skills.map(skill => <div class="skill-card">{typeof skill.icon === 'string' ? <Icon name={skill.icon} /> : <img class="skill-logo" src={skill.icon.src} width="60" height="60" alt={`${skill.name} 图标`} />}<h3>{skill.name}</h3></div>)}</div></section>
-   <section id="projects" class="content-row projects"><div class="section-title"><h2>项目展示<span>′</span></h2><p>PROJECTS <b>↗</b></p></div><div class="project-grid">{projects.map(project => <ProjectCard project={project} />)}</div></section>
-   <section id="about" class="content-row about"><div class="section-title"><h2>关于我<span>′</span></h2><p>ABOUT <b>↗</b></p></div><div class="bio profile-bio"><img class="avatar" src={profile.avatar.src} width="88" height="88" alt="Orca丶的头像" loading="lazy" /><div><p class="bio-name">我叫 {profile.name}。</p><p>{profile.abstract}</p></div></div><p class="manifesto">热爱游戏，<br/><span>持续创造。</span></p></section>
+    <section id="skills" class="content-row skills"><div class="section-title"><h2>技能<span>′</span></h2><p>SKILLS <b>↗</b></p></div><div class="skill-grid">{skills.map(skill => <div class="skill-card">{skill.image ? <img class="skill-logo" src={skill.image} width="60" height="60" alt={`${skill.name} 图标`} /> : <Icon name={skill.icon!} />}<h3>{skill.name}</h3></div>)}</div></section>
+    <section id="projects" class="content-row projects"><div class="section-title"><h2>项目展示<span>′</span></h2><p>PROJECTS <b>↗</b></p></div><div class="project-grid">{projects.map(project => <ProjectCard project={project} />)}</div></section>
+    <section id="blog" class="content-row blog"><div class="section-title"><h2>博客<span>′</span></h2><p>BLOG <b>↗</b></p></div><div class="blog-grid">{blogPosts.slice(0, 4).map(post => <a class="blog-card blog-card-published" href={`/blog/${post.id}/`}><p class="blog-card-label">{post.data.tags[0] ?? 'DEVLOG'}</p><h3>{post.data.title}</h3><p class="blog-card-description">{post.data.description}</p><time datetime={post.data.publishedAt.toISOString()}>{post.data.publishedAt.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}</time><span class="blog-card-read">阅读全文 ↗</span><span class="round-arrow" aria-hidden="true"><Icon name="arrow" /></span></a>)}{blogPlaceholders.slice(0, remainingBlogCards).map(post => <article class="blog-card blog-card-placeholder"><p class="blog-card-label">{post.label}</p><h3>{post.title}</h3><p class="blog-card-description">{post.description}</p><span class="blog-card-status">即将发布</span></article>)}</div></section>
+     <section id="about" class="content-row about"><div class="section-title"><h2>关于我<span>′</span></h2><p>ABOUT <b>↗</b></p></div><div class="bio profile-bio"><img class="avatar" src={profile.avatar} width="88" height="88" alt="Orca丶的头像" loading="lazy" /><div><p class="bio-name">我叫 {profile.name}。</p><p>{profile.abstract}</p></div></div><p class="manifesto">热爱游戏，<br/><span>持续创造。</span></p></section>
   </main>
   <footer id="contact" class="content-row contact"><div class="section-title"><h2>联系我<span>′</span></h2><p>CONTACT <b>↗</b></p></div><div class="contact-links"><a href={`mailto:${profile.email}`}><Icon name="mail" /><span>{profile.email}</span></a><a href={profile.bilibili} target="_blank" rel="noopener noreferrer"><Icon name="tv" /><span>Bilibili<small>{profile.name}</small></span></a><a href={profile.github} target="_blank" rel="noopener noreferrer"><Icon name="github" /><span>GitHub<small>dauphinYan</small></span></a></div><div class="contact-meta"><p>本网站基于 Astro 构建</p><p>© 2026 Orca丶. 保留所有权利。</p></div></footer>
   <script>
    const links = document.querySelectorAll('nav a');
    const observer = new IntersectionObserver(entries => { entries.forEach(entry => { if(entry.isIntersecting) links.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id)); }); }, { threshold: 0, rootMargin: '-10% 0px -65% 0px' });
-   ['home','projects','about','contact'].forEach(id => observer.observe(document.getElementById(id)!));
+    ['home','projects','blog','about','contact'].forEach(id => observer.observe(document.getElementById(id)!));
   </script>
  </body>
 </html>

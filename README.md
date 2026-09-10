@@ -22,13 +22,20 @@ npm run preview
 
 ## 页面与内容
 
-- `/`：个人首页，展示三个项目、简介与联系方式。
+- `/`：个人首页，展示项目、博客、简介与联系方式。
 - `/lockknock/`：洛克的迷宫专题页，包含游戏介绍、海报、可放大截图和关注入口。
+- `/blog/<slug>/`：由本地 Markdown 在构建时自动生成的博客详情页。
 - `src/data/portfolio.ts`：个人资料与项目数据，两页共用联系方式。
 - `src/components/ProjectCard.astro`：项目卡片。
 - `src/styles/global.css`、`src/styles/portfolio.css`：首页样式。
 - `src/styles/lockknock.css`：专题页样式。
+- `src/content/blog/*.md`：博客文章源文件；除草稿外都会自动生成详情页。
+- `src/content/blog/TEMPLATE.md`：新文章模板，复制后修改 frontmatter 并移除 `draft: true` 即可发布。
 
-素材直接从 `assets` 导入，由 Astro 构建到产物中。洛克的迷宫使用 `LockKnock` 目录，赛尔号记牌器使用 `SeerAssistant` 目录，头像使用 `Hinami Aoi.jpg`。按用户确认，剑的世界暂用“制作中”文字封面，未使用 Conan、SeerPlan 素材。
+素材位于 `src/assets/`，由 Astro 静态导入并构建到产物中。目录按用途分为 `projects/`、`icons/` 和 `profile/`；所有文件与目录名称使用小写短横线格式。按用户确认，剑的世界暂用“制作中”文字封面，`projects/conan/` 与 `projects/seer-plan/` 的素材尚未被页面引用。
 
 `public/reference.png` 保留为首页涂鸦装饰背景。字体使用 Google Fonts，并提供系统字体回退。项目没有提供下载或商店链接，因此页面仅提供已知的个人主页和邮件联系入口。
+
+## 发布博客
+
+复制 `src/content/blog/TEMPLATE.md` 到同一目录，使用英文短横线文件名，例如 `my-first-post.md`。填写标题、摘要、日期和标签，完成后删除 `draft: true`（或设为 `false`）。Markdown 正文会在 `npm run dev` 和 `npm run build` 时自动转换为 `/blog/my-first-post/`。

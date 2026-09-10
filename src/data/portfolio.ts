@@ -1,6 +1,6 @@
-import lockCover from '../../assets/LockKnock/Cover_Horizontal.jpg';
-import seerCover from '../../assets/SeerAssistant/SeerAssistant_Screenshot.png';
-import avatar from '../../assets/Hinami Aoi.jpg';
+import lockCover from '../assets/projects/lock-knock/cover-horizontal.jpg?url';
+import seerCover from '../assets/projects/seer-assistant/seer-assistant-screenshot.png?url';
+import avatar from '../assets/profile/hinami-aoi.jpg?url';
 
 export const profile = {
   name: 'Orca丶',
@@ -29,4 +29,3 @@ export const projects = [
     image: null, href: null, status: '制作中',
   },
 ];
-

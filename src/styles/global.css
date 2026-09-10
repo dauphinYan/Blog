@@ -128,9 +128,12 @@ nav a{font-size:15px}
 .skill-card svg{width:44px;height:44px}
 .skill-logo{width:47px;height:47px}
 .skill-card h3{font-size:13px}
-.project-grid{grid-template-columns:1fr;gap:15px}
-.project-bottom{font-size:24px;padding:20px 18px 12px}
-.about .bio{font-size:15px;line-height:1.9}
+ .project-grid{grid-template-columns:1fr;gap:15px}
+ .project-bottom{font-size:24px;padding:20px 18px 12px}
+ .blog-grid{grid-template-columns:1fr;gap:12px}
+ .blog-card{min-height:150px;padding:17px 54px 16px 17px}
+ .blog-card h3{font-size:21px}
+ .about .bio{font-size:15px;line-height:1.9}
 .manifesto{font-size:28px;width:max-content;margin:30px 20px 15px auto}
 .contact-links{flex-wrap:wrap;gap:25px 35px}
 .contact-links a{font-size:14px}
