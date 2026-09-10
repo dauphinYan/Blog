@@ -1,0 +1,75 @@
+---
+import '../styles/lockknock.css';
+import { profile, projects } from '../data/portfolio';
+import cover from '../../assets/LockKnock/Cover_Horizontal.jpg';
+import poster from '../../assets/LockKnock/Cover_Vertical.png';
+import title from '../../assets/LockKnock/Tittle.png';
+import scene from '../../assets/LockKnock/Lockknock_Screenshot_1.png';
+import creature from '../../assets/LockKnock/Lockknock_Screenshot_2.png';
+import lantern from '../../assets/LockKnock/Lockknock_Screenshot_3.png';
+const project = projects[0];
+const screenshots = [
+  { image: scene, title: '迷宫一隅', caption: '昏暗的房间，未知的前路。' },
+  { image: creature, title: '直面诡异', caption: '克苏鲁风格下的异样世界。' },
+  { image: lantern, title: '黑暗中的微光', caption: '提起灯，走进迷宫。' },
+];
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={`洛克的迷宫 — ${project.description} Orca丶的游戏项目。`} />
+    <meta name="theme-color" content="#101011" />
+    <title>洛克的迷宫 · Lock Knock — Orca丶</title>
+  </head>
+  <body>
+    <header class="game-header">
+      <a class="author-logo" href="/">ORCA<span>丶</span><small>独立游戏开发</small></a>
+      <nav aria-label="专题导航"><a href="#about-game">游戏介绍</a><a href="#gallery">游戏画面</a><a href="/#projects">返回作品集 ↗</a></nav>
+    </header>
+    <main>
+      <section class="game-hero" aria-labelledby="game-title">
+        <img class="hero-cover" src={cover.src} width={cover.width} height={cover.height} alt="提灯的角色站在门口，身后暗处浮现触手" fetchpriority="high" />
+        <div class="hero-shade"></div>
+        <div class="game-hero-content">
+          <p class="eyebrow">AN INDIE GAME BY ORCA</p>
+          <h1 id="game-title"><img src={title.src} width={title.width} height={title.height} alt="洛克的迷宫 · Lock Knock" /></h1>
+          <p class="hero-quote">门后，是未知。<br />而你，必须向前。</p>
+          <p class="hero-description">{project.description}</p>
+          <div class="hero-actions"><a class="gold-button" href="#gallery">窥见迷宫 <span>↘</span></a><a class="text-button" href="#about-game">了解游戏 <span>↓</span></a></div>
+        </div>
+        <div class="hero-bottom"><span>UNREAL ENGINE · 探索 / 迷宫 / 角色扮演</span><a href="#about-game">向下探索 ↓</a></div>
+      </section>
+      <section class="game-about game-section" id="about-game">
+        <div class="poster-frame"><img src={poster.src} width={poster.width} height={poster.height} alt="洛克的迷宫竖版游戏海报" loading="lazy" /><span>LOCK KNOCK / 01</span></div>
+        <div class="about-copy"><p class="eyebrow">01 / INTO THE UNKNOWN</p><h2>踏入迷宫，<br /><em>直面未知。</em></h2><p class="intro">{project.description}</p><p class="subtle">一场围绕探索与逃生展开的冒险。诡异的环境、潜伏的恶灵与怪物，共同构成这座迷宫的危险。</p><ul class="game-tags">{project.tags.map(tag => <li>{tag}</li>)}</ul><dl class="game-facts"><div><dt>开发者</dt><dd>{profile.name}</dd></div><div><dt>开发引擎</dt><dd>Unreal Engine</dd></div><div><dt>游戏风格</dt><dd>克苏鲁 · 诡异</dd></div></dl></div>
+      </section>
+      <section class="gallery-section game-section" id="gallery">
+        <div class="section-heading"><div><p class="eyebrow">02 / GLIMPSES OF THE MAZE</p><h2>来自迷宫的切片</h2></div><p>游戏画面 / 点击查看大图</p></div>
+        <div class="gallery-grid">{screenshots.map((shot, index) => <figure><button class="screenshot-button" data-image={shot.image.src} data-caption={shot.title} aria-label={`放大查看：${shot.title}`}><img src={shot.image.src} width={shot.image.width} height={shot.image.height} alt={shot.title} loading="lazy" /><span class="zoom-mark" aria-hidden="true">↗</span></button><figcaption><span class="shot-number">0{index + 1}</span><div><h3>{shot.title}</h3><p>{shot.caption}</p></div></figcaption></figure>)}</div>
+      </section>
+      <section class="game-follow"><p class="eyebrow">THE JOURNEY CONTINUES</p><h2>在微光中，继续前行。</h2><p>关注 Orca丶，了解更多游戏与开发内容。</p><div class="follow-actions"><a class="gold-button" href={profile.bilibili} target="_blank" rel="noopener noreferrer">前往 Bilibili ↗</a><a class="text-button" href={`mailto:${profile.email}`}>联系开发者 ↗</a></div></section>
+    </main>
+    <footer class="game-footer"><span>洛克的迷宫 / LOCK KNOCK</span><a href="/">Orca丶 · 返回个人主页 ↗</a></footer>
+    <dialog class="lightbox" aria-label="游戏截图大图"><button class="lightbox-close" aria-label="关闭大图">×</button><img alt="" /><p></p></dialog>
+    <script>
+      const lightbox = document.querySelector<HTMLDialogElement>('.lightbox')!;
+      const image = lightbox.querySelector('img')!;
+      document.querySelectorAll<HTMLButtonElement>('[data-image]').forEach(button => {
+        button.addEventListener('click', () => {
+          image.src = button.dataset.image!;
+          image.alt = button.dataset.caption!;
+          lightbox.querySelector('p')!.textContent = button.dataset.caption!;
+          lightbox.showModal();
+        });
+      });
+      lightbox.querySelector('button')!.addEventListener('click', () => lightbox.close());
+      lightbox.addEventListener('click', event => {
+        if (event.target !== lightbox) return;
+        const bounds = lightbox.getBoundingClientRect();
+        if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) lightbox.close();
+      });
+    </script>
+  </body>
+</html>
