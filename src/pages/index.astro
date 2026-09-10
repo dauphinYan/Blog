@@ -4,7 +4,9 @@ import '../styles/portfolio.css';
 import Icon from '../components/Icon.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { profile, projects } from '../data/portfolio';
-const skills = [ { name: 'Unreal Engine', icon: 'unreal' }, { name: 'C++', icon: 'cpp' }, { name: '游戏设计', icon: 'game' }, { name: '3D 美术', icon: 'cube' }, { name: '其他', icon: 'tools' } ];
+import unrealIcon from '../../assets/Icon/Unreal.png';
+import cppIcon from '../../assets/Icon/C++.png';
+const skills = [ { name: 'Unreal Engine', icon: unrealIcon }, { name: 'C++', icon: cppIcon }, { name: '其他', icon: 'tools' } ];
 
 ---
 <!doctype html>
@@ -14,7 +16,7 @@ const skills = [ { name: 'Unreal Engine', icon: 'unreal' }, { name: 'C++', icon:
   <header><div class="nav-inner"><nav aria-label="主导航"><a href="#home" class="active">首页</a><a href="#projects">项目</a><a href="#about">关于</a><a href="#contact">联系</a></nav></div></header>
   <main>
    <section id="home" class="hero"><div class="hero-art" aria-hidden="true"></div><div class="hero-copy"><h1><span class="hello">你好，我是</span><span class="name">Orca丶</span></h1><p class="profession">Unreal Engine / C++ / 游戏开发</p><p class="tagline">把想法，变成可玩的世界。</p></div><span class="hero-spark" aria-hidden="true">✦</span></section>
-   <section id="skills" class="content-row skills"><div class="section-title"><h2>技能<span>′</span></h2><p>SKILLS <b>↗</b></p></div><div class="skill-grid">{skills.map(skill => <div class="skill-card">{skill.icon === 'unreal' ? <span class="unreal">𝖀</span> : skill.icon === 'cpp' ? <span class="cpp">C<small>++</small></span> : <Icon name={skill.icon} />}<h3>{skill.name}</h3></div>)}</div></section>
+   <section id="skills" class="content-row skills"><div class="section-title"><h2>技能<span>′</span></h2><p>SKILLS <b>↗</b></p></div><div class="skill-grid">{skills.map(skill => <div class="skill-card">{typeof skill.icon === 'string' ? <Icon name={skill.icon} /> : <img class="skill-logo" src={skill.icon.src} width="60" height="60" alt={`${skill.name} 图标`} />}<h3>{skill.name}</h3></div>)}</div></section>
    <section id="projects" class="content-row projects"><div class="section-title"><h2>项目展示<span>′</span></h2><p>PROJECTS <b>↗</b></p></div><div class="project-grid">{projects.map(project => <ProjectCard project={project} />)}</div></section>
    <section id="about" class="content-row about"><div class="section-title"><h2>关于我<span>′</span></h2><p>ABOUT <b>↗</b></p></div><div class="bio profile-bio"><img class="avatar" src={profile.avatar.src} width="88" height="88" alt="Orca丶的头像" loading="lazy" /><div><p class="bio-name">我叫 {profile.name}。</p><p>{profile.abstract}</p></div></div><p class="manifesto">热爱游戏，<br/><span>持续创造。</span></p></section>
   </main>

@@ -7,13 +7,13 @@ a{color:inherit;text-decoration:none}
 button{font:inherit}
 a,button{-webkit-tap-highlight-color:transparent}
 a:focus-visible,button:focus-visible{outline:3px solid var(--pink);outline-offset:5px}
-header{height:64px;border-bottom:1px solid #18181812;position:relative;z-index:2}
+header{height:64px;border-bottom:1px solid #18181812;position:sticky;top:0;z-index:2;background-color:var(--paper);background-image:var(--paper-grain)}
 header:before{content:'';position:absolute;inset:0 auto 0 0;width:145px;background:radial-gradient(var(--pink) 1.1px,transparent 1.8px) 0 0/7px 7px;mask-image:linear-gradient(110deg,#000,transparent 85%);pointer-events:none}
-.nav-inner{max-width:1450px;margin:auto;display:flex;align-items:center;gap:105px;height:100%;padding:0 35px}
+.nav-inner{max-width:1450px;margin:auto;display:flex;align-items:center;gap:105px;height:100%;padding:0 35px;position:relative}
 .logo{font-family:Impact,'Arial Black',sans-serif;font-size:39px;font-weight:900;font-style:italic;letter-spacing:-2px;transform:rotate(-5deg);position:relative;line-height:1}
 .crown{font-size:31px;color:var(--lime);-webkit-text-stroke:1px #111}
 .logo-line{position:absolute;z-index:-1;height:10px;left:30px;right:-10px;bottom:0;background:var(--lime);transform:rotate(-7deg);clip-path:polygon(0 45%,100% 0,88% 45%,100% 70%,0 100%)}
-nav{display:flex;gap:57px;height:100%;align-items:center;margin-left:auto}
+nav{display:flex;gap:57px;height:100%;align-items:center;position:absolute;left:50%;transform:translateX(-50%)}
 nav a{font-size:20px;font-weight:900;position:relative;padding:10px 3px}
 nav a:after{content:'';position:absolute;bottom:4px;left:0;right:0;height:4px;background:var(--pink);transform:scaleX(0);transition:transform .2s}
 nav a.active,nav a:hover{color:var(--pink)}
@@ -29,11 +29,11 @@ h1{margin:0;line-height:1}
 .tagline:after{content:'';position:absolute;bottom:-10px;left:15%;width:90%;height:8px;background:var(--lime);clip-path:polygon(0 75%,100% 0,70% 70%,90% 80%,0 100%)}
 .hero-spark{position:absolute;left:3%;top:39%;font-size:48px;color:var(--lime)}
 .content-row{display:flex;align-items:center;gap:28px;padding:16px 4%;border-bottom:1px solid #0003;position:relative}
-.section-title{flex:0 0 215px;transform:rotate(-7deg);padding-left:2px}
+.section-title{flex:0 0 215px;min-width:0;position:relative;transform:rotate(-7deg);padding-left:2px}
 .section-title h2{font-size:clamp(32px,3.2vw,51px);font-weight:900;font-style:italic;margin:0;line-height:1.15;white-space:nowrap;letter-spacing:-2px}
 .section-title h2 span{display:inline-block;color:var(--pink);font-size:54px;margin-left:7px;transform:rotate(20deg)}
 .section-title p{font-family:'Arial Black',Arial,sans-serif;font-style:italic;color:#666;font-size:25px;font-weight:900;margin:4px 0 0 8px;line-height:1}
-.section-title b{display:inline-block;color:var(--lime);font-size:80px;line-height:25px;vertical-align:middle;margin-left:6px;transform:rotate(8deg)}
+.section-title b{position:absolute;left:72%;bottom:-16px;color:var(--lime);font-size:80px;line-height:1;transform:rotate(8deg)}
 .skill-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;flex:1}
 .skill-card{border:1px solid #0003;border-radius:5px;height:128px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;position:relative;overflow:hidden;transition:transform .2s,background .2s}
 .skill-card:after{content:'';position:absolute;inset:auto auto 0 0;width:65px;height:45px;background:radial-gradient(#111 1px,transparent 1.5px) 0 0/5px 5px;mask-image:linear-gradient(45deg,#000,transparent 65%)}
@@ -41,9 +41,7 @@ h1{margin:0;line-height:1}
 .skill-card:hover{transform:translateY(-4px);background:#b5ff1620}
 .skill-card svg{width:56px;height:56px}
 .skill-card h3{margin:0;font-size:20px;font-weight:700}
-.unreal{border-radius:50%;background:#080808;color:#fff;width:60px;height:60px;line-height:55px;text-align:center;font-size:51px}
-.cpp{background:linear-gradient(145deg,#30b2f1 0 35%,#0877cb 36% 65%,#06417a 66%);clip-path:polygon(50% 0,94% 25%,94% 75%,50% 100%,6% 75%,6% 25%);width:60px;height:63px;color:white;font:bold 48px/63px Arial;text-align:center;position:relative}
-.cpp small{font-size:15px;position:absolute;right:5px;top:0}
+.skill-logo{width:60px;height:60px;object-fit:contain}
 .projects{padding-top:10px;padding-bottom:12px}
 .project-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;flex:1}
 .project-card{position:relative;aspect-ratio:2.57;border:0;padding:0;border-radius:5px;overflow:hidden;cursor:pointer;background:#080808;color:white;text-align:left;box-shadow:0 1px 3px #0002}
@@ -61,17 +59,15 @@ h1{margin:0;line-height:1}
 .bio p{margin:0}
 .manifesto{font-family:'ZCOOL KuaiLe','Noto Sans SC',sans-serif;font-size:33px;font-style:italic;transform:rotate(-13deg);line-height:1.35;margin:0 6% 0 20px;white-space:nowrap;position:relative}
 .manifesto:after{content:'';height:7px;background:var(--lime);position:absolute;bottom:-8px;left:5%;width:110%;transform:rotate(-5deg)}
-.contact{display:grid;grid-template-columns:215px minmax(0,1fr);grid-template-rows:auto auto;align-content:center;column-gap:28px;row-gap:16px;flex:1 0 180px;min-height:180px;padding-top:18px;padding-bottom:18px;border:0;overflow:hidden}
+.contact{display:grid;grid-template-columns:215px minmax(0,1fr);grid-template-rows:auto auto;align-content:center;column-gap:28px;row-gap:16px;flex:0 0 auto;min-height:180px;padding-top:18px;padding-bottom:18px;border:0;overflow:hidden}
 .contact:after{content:'';position:absolute;z-index:-1;right:-30px;bottom:-100px;width:280px;height:200px;transform:rotate(-20deg);background:repeating-linear-gradient(160deg,#111 0 25px,var(--pink) 26px 50px,#111 51px 80px,var(--lime) 81px 92px);opacity:.9}
-.contact .section-title h2{font-size:35px}
-.contact .section-title p{font-size:20px}
-.contact .section-title b{font-size:66px}
 .contact-links{display:flex;align-items:center;gap:clamp(40px,6vw,110px);padding-right:100px}
 .contact-links a{display:flex;gap:24px;align-items:center;font-size:17px;font-weight:500}
 .contact-links a:hover{color:var(--pink)}
 .contact-links svg{height:44px;width:44px}
 .contact-links small{display:block;font-size:16px}
-.contact-meta{grid-column:1/-1;position:static;display:flex;justify-content:space-between;gap:24px;padding-top:12px;border-top:1px solid #0002;color:#555;font-size:13px;line-height:1.4;letter-spacing:.2px}
+.contact-meta{grid-column:1/-1;position:relative;display:flex;justify-content:space-between;gap:24px;padding-top:12px;color:#555;font-size:13px;line-height:1.4;letter-spacing:.2px}
+.contact-meta:before{content:'';position:absolute;top:0;left:50%;width:100vw;height:1px;background:#0002;transform:translateX(-50%)}
 dialog{width:min(520px,90vw);padding:44px;border:2px solid #111;background:var(--paper);box-shadow:12px 12px 0 var(--pink)}
 dialog::backdrop{background:#000b;backdrop-filter:blur(5px)}
 .close-dialog{position:absolute;right:15px;top:5px;border:0;background:none;font-size:35px;cursor:pointer}
@@ -89,7 +85,7 @@ dialog h2{font-size:40px;margin:25px 0 10px}
 .section-title{flex-basis:165px}
 .section-title h2{font-size:35px}
 .section-title p{font-size:20px}
-.section-title b{font-size:60px}
+.section-title b{font-size:60px;bottom:-12px}
 .content-row{gap:20px;padding-left:3%;padding-right:3%}
 .skill-card{height:110px}
 .skill-card h3{font-size:15px}
@@ -102,6 +98,9 @@ dialog h2{font-size:40px;margin:25px 0 10px}
 .profession{margin-left:0}
 .tagline{margin-left:40px}
 .nav-inner{gap:70px}
+}
+@media(max-width:840px){.nav-inner{justify-content:flex-end}
+nav{position:static;margin-left:auto;transform:none}
 }
 @media(max-width:720px){header{height:68px}
  .contact{display:block;flex:0 0 auto;min-height:0;padding-bottom:25px}
@@ -123,13 +122,11 @@ nav a{font-size:15px}
 .section-title h2{font-size:35px}
 .section-title h2 span{font-size:40px}
 .section-title p{font-size:17px}
-.section-title b{font-size:56px}
+ .section-title b{font-size:56px;bottom:-10px}
 .skill-grid{grid-template-columns:repeat(3,1fr);gap:10px}
 .skill-card{height:105px}
 .skill-card svg{width:44px;height:44px}
-.unreal{width:47px;height:47px;font-size:41px;line-height:43px}
-.cpp{width:46px;height:50px;font-size:38px;line-height:50px}
-.cpp small{font-size:11px;right:3px}
+.skill-logo{width:47px;height:47px}
 .skill-card h3{font-size:13px}
 .project-grid{grid-template-columns:1fr;gap:15px}
 .project-bottom{font-size:24px;padding:20px 18px 12px}
@@ -143,7 +140,7 @@ nav a{font-size:15px}
 .contact-meta p{margin:0}
 .contact-meta p + p{margin-top:6px}
 .contact:after{opacity:.25}
-html{scroll-padding-top:15px}
+ html{scroll-padding-top:76px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}
 *,*:before,*:after{transition:none!important}
