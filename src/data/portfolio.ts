@@ -7,7 +7,7 @@ export const profile = {
   github: 'https://github.com/dauphinYan',
   bilibili: 'https://space.bilibili.com/285301431',
   email: '584485321@qq.com',
-  abstract: '一个特别想做出自己游戏的菜鸟程序员，不擅长与人打交道、讨厌太多世俗规矩',
+  abstract: '一个特别想做出自己游戏的菜鸟程序员，不擅长与人打交道、讨厌太多世俗规矩。',
   avatar,
 };
 
