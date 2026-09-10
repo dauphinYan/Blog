@@ -16,6 +16,10 @@ npm run build
 npm run preview
 ```
 
+## GitHub Pages 部署
+
+推送至 `master` 会触发 `.github/workflows/deploy-pages.yml`，自动构建 `dist/` 并发布到 GitHub Pages。当前站点使用自定义域名 `https://dolphindream.cn/`；`public/CNAME` 必须保留，避免部署时丢失域名绑定。
+
 ## 页面与内容
 
 - `/`：个人首页，展示三个项目、简介与联系方式。
