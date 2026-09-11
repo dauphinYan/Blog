@@ -57,6 +57,7 @@ body:has(.project-dialog[open]) { overflow: hidden; }
   .profile-bio { align-items: flex-start; }
   .avatar { width: 62px; height: 62px; }
   .contact-links { gap: 22px; }
+  .blog-grid { grid-template-columns: 1fr; gap: 12px; }
   .blog-card { min-height: 160px; }
 }
 

@@ -1,7 +1,8 @@
 Name: Orca丶
 Github: https://github.com/dauphinYan
 Bilibili: https://space.bilibili.com/285301431
-Email: 584485321@qq.com
+Email: dauphinyan@foxmail.com (displayed as Foxmail)
+Gmail: dauphinyan03@gmail.com
 
 Abstract:
 一个特别想做出自己游戏的菜鸟程序员，不擅长与人打交道、讨厌太多世俗规矩

@@ -12,7 +12,7 @@
 
 ## Home Page Layout
 
-`src/pages/index.astro` composes the hero, skills, projects, blog, profile, and contact sections. Desktop content rows use a fixed 215px section-title column followed by a flexible content grid. The title column has `min-width: 0` so long labels do not enlarge the column and shift later grids horizontally. At widths of 720px or less, rows stack vertically. The blog row uses a two-column card grid on desktop and one column on mobile.
+`src/pages/index.astro` composes the hero, skills, projects, blog, profile, and contact sections. Desktop content rows use a fixed 215px section-title column followed by a flexible content grid. The title column has `min-width: 0` so long labels do not enlarge the column and shift later grids horizontally. At widths of 720px or less, rows stack vertically. The blog row uses a two-column card grid on desktop and an explicit one-column, four-card vertical grid on mobile; this override lives in `src/styles/portfolio.css`, which loads after the shared styles.
 
 ## Blog Content
 
