@@ -18,7 +18,7 @@ export const projects = [
     title: '洛克的迷宫', key: 'lockknock',
     tags: ['Unreal Engine', '探索', '迷宫', '角色扮演'],
     description: '探索克苏鲁风格的诡异迷宫，躲避恶灵与怪物的追杀。',
-    image: lockCover, href: '/lockknock/', status: null,
+    image: lockCover, href: '/project/lockknock/', status: null,
   },
   {
     title: '赛尔号记牌器', key: 'seer', tags: ['逆向', 'QT'],

@@ -28,6 +28,7 @@ const publishedDate = post.data.publishedAt.toLocaleDateString('zh-CN', {
     <meta name="description" content={post.data.description} />
     <meta name="theme-color" content="#f7f6f0" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#171a16" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{post.data.title} - Orca丶的博客</title>
   </head>
   <body>
@@ -49,8 +50,23 @@ const publishedDate = post.data.publishedAt.toLocaleDateString('zh-CN', {
         <div class="article-body"><Content /></div>
       </article>
     </main>
-    <footer class="blog-footer"><a href="/">Orca丶</a><span>把想法，变成可玩的世界。</span></footer>
+    <button class="back-to-top" type="button" aria-label="回到页面顶部" data-back-to-top hidden>TOP ↑</button>
+    <footer class="blog-footer"><span>本网站基于 Astro 构建</span><span>© 2026 Orca丶. 保留所有权利。</span></footer>
     <script>
+      const backToTop = document.querySelector('[data-back-to-top]');
+      if (backToTop instanceof HTMLButtonElement) {
+        const updateBackToTopVisibility = () => {
+          backToTop.hidden = window.scrollY < window.innerHeight;
+        };
+
+        updateBackToTopVisibility();
+        window.addEventListener('scroll', updateBackToTopVisibility, { passive: true });
+        backToTop.addEventListener('click', () => {
+          const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+        });
+      }
+
       const toc = document.querySelector('[data-article-toc]');
       const tocList = document.querySelector('#article-toc-list');
       const headings = [...document.querySelectorAll('.article-body h2, .article-body h3, .article-body h4')];

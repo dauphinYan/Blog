@@ -23,7 +23,7 @@ npm run preview
 ## 页面与内容
 
 - `/`：个人首页，展示项目、博客、简介与联系方式。
-- `/lockknock/`：洛克的迷宫专题页，包含游戏介绍、海报、可放大截图和关注入口。
+- `/project/lockknock/`：洛克的迷宫专题页，包含游戏介绍、海报、可放大截图和关注入口。
 - `/blog/<slug>/`：由本地 Markdown 在构建时自动生成的博客详情页。
 - `src/data/portfolio.ts`：个人资料与项目数据，两页共用联系方式。
 - `src/components/ProjectCard.astro`：项目卡片。

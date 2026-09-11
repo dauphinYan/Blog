@@ -15,6 +15,9 @@ Project:
 
    Unreal Engine	探索	迷宫	角色扮演
 
+    专题页舞台装置：GrewGame（独立游戏开发）
+    宣传视频：https://www.bilibili.com/video/BV1SwGN68EPs
+
 2. 赛尔号记牌器：游戏辅助，通过抓取网络数据包，解析数据，实现对战信息记录，帮助新手玩家。累计下载 3000+ 次。
 
    逆向	QT
