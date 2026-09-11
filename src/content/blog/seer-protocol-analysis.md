@@ -1,5 +1,5 @@
 ---
-title: "赛尔号通信协议阅读笔记：从 Flash 文件到封包结构"
+title: "赛尔号通信协议解析：源码解析与Hook注入"
 description: "一次围绕 Flash 客户端、网络封包边界和 TCP 数据流处理的学习记录。"
 publishedAt: 2026-09-10
 tags:

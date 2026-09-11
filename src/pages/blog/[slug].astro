@@ -32,6 +32,13 @@ const publishedDate = post.data.publishedAt.toLocaleDateString('zh-CN', {
   </head>
   <body>
     <header><div class="nav-inner"><nav aria-label="文章导航"><a href="/">首页</a></nav></div></header>
+    <aside class="article-toc" aria-label="文章目录" data-article-toc hidden>
+      <p class="article-toc-label">ON THIS PAGE</p>
+      <button class="article-toc-toggle" type="button" aria-expanded="true" aria-controls="article-toc-list">目录 <span aria-hidden="true">−</span></button>
+      <nav id="article-toc-list" aria-label="文章章节"></nav>
+    </aside>
+    <div class="article-decor article-decor-left" aria-hidden="true"><span>+</span><i></i><b>001</b></div>
+    <div class="article-decor article-decor-right" aria-hidden="true"><span>PLAY</span><i></i><b>///</b></div>
     <main class="blog-page">
       <article class="blog-post">
         <a class="back-link" href="/#blog">← 返回博客列表</a>
@@ -43,5 +50,112 @@ const publishedDate = post.data.publishedAt.toLocaleDateString('zh-CN', {
       </article>
     </main>
     <footer class="blog-footer"><a href="/">Orca丶</a><span>把想法，变成可玩的世界。</span></footer>
+    <script>
+      const toc = document.querySelector('[data-article-toc]');
+      const tocList = document.querySelector('#article-toc-list');
+      const headings = [...document.querySelectorAll('.article-body h2, .article-body h3, .article-body h4')];
+
+      if (toc instanceof HTMLElement && tocList instanceof HTMLElement && headings.length > 0) {
+        const usedIds = new Set();
+        const root = { level: 1, children: [] as { level: number; heading: HTMLElement; children: unknown[] }[] };
+        const stack = [root];
+
+        headings.forEach((heading, index) => {
+          if (!heading.id) {
+            const baseId = heading.textContent?.trim().toLowerCase().replace(/[^\w\u4e00-\u9fff]+/g, '-') || `section-${index + 1}`;
+            let id = baseId;
+            let suffix = 2;
+            while (usedIds.has(id) || document.getElementById(id)) id = `${baseId}-${suffix++}`;
+            heading.id = id;
+          }
+          usedIds.add(heading.id);
+
+          const level = Number(heading.tagName.slice(1));
+          while (stack.at(-1)!.level >= level) stack.pop();
+          const item = { level, heading, children: [] as typeof root.children };
+          stack.at(-1)!.children.push(item);
+          stack.push(item);
+        });
+
+        const setBranchExpanded = (listItem: HTMLLIElement, expanded: boolean) => {
+          const button = listItem.querySelector(':scope > .article-toc-branch');
+          if (!(button instanceof HTMLButtonElement)) return;
+          listItem.classList.toggle('is-collapsed', !expanded);
+          button.setAttribute('aria-expanded', String(expanded));
+          button.textContent = expanded ? '−' : '+';
+        };
+
+        const renderItems = (items: typeof root.children) => {
+          const list = document.createElement('ul');
+          items.forEach(item => {
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = `#${item.heading.id}`;
+            link.textContent = item.heading.textContent;
+            link.dataset.tocTarget = item.heading.id;
+            listItem.append(link);
+
+            if (item.children.length > 0) {
+              const button = document.createElement('button');
+              button.type = 'button';
+              button.className = 'article-toc-branch';
+              button.setAttribute('aria-label', `展开或收起${item.heading.textContent}`);
+              button.setAttribute('aria-expanded', 'false');
+              button.textContent = '+';
+              listItem.classList.add('is-collapsed');
+              button.addEventListener('click', () => {
+                const expanded = listItem.classList.contains('is-collapsed');
+                button.dataset.manualState = expanded ? 'expanded' : 'collapsed';
+                setBranchExpanded(listItem, expanded);
+              });
+              listItem.prepend(button);
+              listItem.append(renderItems(item.children));
+            }
+            list.append(listItem);
+          });
+          return list;
+        };
+
+        tocList.append(renderItems(root.children));
+        toc.hidden = false;
+
+        const tocToggle = toc.querySelector('.article-toc-toggle');
+        tocToggle?.addEventListener('click', () => {
+          const collapsed = toc.classList.toggle('is-collapsed');
+          tocToggle.setAttribute('aria-expanded', String(!collapsed));
+          tocToggle.querySelector('span')!.textContent = collapsed ? '+' : '−';
+        });
+
+        const tocLinks = [...toc.querySelectorAll<HTMLAnchorElement>('[data-toc-target]')];
+        const branchItems = [...toc.querySelectorAll<HTMLLIElement>('li:has(> .article-toc-branch)')];
+        const revealActivePath = (heading: Element) => {
+          const activeLink = tocLinks.find(link => link.dataset.tocTarget === heading.id);
+          const activePath = new Set<HTMLLIElement>();
+          let listItem = activeLink?.closest('li');
+
+          while (listItem instanceof HTMLLIElement) {
+            if (listItem.querySelector(':scope > .article-toc-branch')) activePath.add(listItem);
+            listItem = listItem.parentElement?.closest('li');
+          }
+
+          branchItems.forEach(branch => {
+            const button = branch.querySelector(':scope > .article-toc-branch');
+            if (!(button instanceof HTMLButtonElement)) return;
+            if (activePath.has(branch)) {
+              setBranchExpanded(branch, true);
+            } else if (button.dataset.manualState !== 'expanded') {
+              setBranchExpanded(branch, false);
+            }
+          });
+        };
+        const headingObserver = new IntersectionObserver(entries => {
+          const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+          if (!visible) return;
+          tocLinks.forEach(link => link.classList.toggle('is-active', link.dataset.tocTarget === visible.target.id));
+          revealActivePath(visible.target);
+        }, { rootMargin: '-15% 0px -70%' });
+        headings.forEach(heading => headingObserver.observe(heading));
+      }
+    </script>
   </body>
 </html>
