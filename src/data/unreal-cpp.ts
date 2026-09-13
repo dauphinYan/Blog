@@ -2,12 +2,32 @@ import type { CollectionEntry } from 'astro:content';
 
 export type KnowledgeEntry = CollectionEntry<'unrealCpp'>;
 
-export const knowledgeBasePath = '/article/unreal-engine/cpp';
+/** 专区首页与文章详情使用不同路由，避免导航链接误指向文章路由根目录。 */
+export const knowledgeHubPath = '/unreal-engine/cpp';
+export const knowledgeArticleBasePath = '/article/unreal-engine/cpp';
+export const knowledgeSectionTitle = '虚幻引擎官方文档 · 中文专区';
 /** 专区根文档：既是目录根节点的内容页，也是其元数据来源。 */
 const rootDocumentSlug = 'programming-with-cplusplus';
 
 export function knowledgeUrl(slug: string): string {
-  return slug ? `${knowledgeBasePath}/${slug}/` : `${knowledgeBasePath}/`;
+  return slug ? `${knowledgeArticleBasePath}/${slug}/` : `${knowledgeHubPath}/`;
+}
+
+/**
+ * 文章页面包屑：专区入口 → 知识库根文档 → 当前文章。
+ * 文件夹只是目录树的组织方式，避免将其误呈现为文档层级。
+ */
+export function knowledgeBreadcrumb(tree: KnowledgeTreeNode[], articleSlug: string) {
+  const rootDocument = tree[0];
+  const current = flattenKnowledgeTree(tree).find(node => node.slug === articleSlug);
+  const items: Array<{ title: string; href?: string }> = [{ title: knowledgeSectionTitle, href: `${knowledgeHubPath}/` }];
+
+  if (rootDocument && rootDocument.slug !== articleSlug && rootDocument.published) {
+    items.push({ title: rootDocument.title, href: knowledgeUrl(rootDocument.slug) });
+  }
+  if (current) items.push({ title: current.title });
+
+  return items;
 }
 
 export function articleUrlSlug(id: string): string {

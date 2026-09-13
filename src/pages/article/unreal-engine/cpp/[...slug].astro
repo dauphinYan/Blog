@@ -6,7 +6,7 @@ import '../../../../styles/knowledge-base.css';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import KnowledgeTree from '../../../../components/KnowledgeTree.astro';
 import ArticleSidebar from '../../../../components/ArticleSidebar.astro';
-import { articleUrlSlug, buildKnowledgeTree, knowledgeBasePath, knowledgeTreeOpenSlugs } from '../../../../data/unreal-cpp';
+import { articleUrlSlug, buildKnowledgeTree, knowledgeBreadcrumb, knowledgeTreeOpenSlugs } from '../../../../data/unreal-cpp';
 import { initKnowledgeTree } from '../../../../scripts/knowledge-tree';
 
 interface Props { article: CollectionEntry<'unrealCpp'>; }
@@ -24,6 +24,7 @@ const { Content } = await render(article);
 const slug = articleUrlSlug(article.id);
 const navigationTree = buildKnowledgeTree(await getCollection('unrealCpp'));
 const openSlugs = knowledgeTreeOpenSlugs(navigationTree, slug);
+const breadcrumb = knowledgeBreadcrumb(navigationTree, slug);
 ---
 <!doctype html>
 <html lang="zh-CN">
@@ -44,7 +45,12 @@ const openSlugs = knowledgeTreeOpenSlugs(navigationTree, slug);
     <div class="article-decor article-decor-left" aria-hidden="true"><span>+</span><i></i><b>UE5</b></div>
     <div class="article-decor article-decor-right" aria-hidden="true"><span>C++</span><i></i><b>///</b></div>
     <main class="blog-page knowledge-article-page">
-      <div class="knowledge-breadcrumb"><a href={knowledgeBasePath + '/'}>虚幻引擎官方文档 · 中文专区</a><span>/</span><span>{article.data.title}</span></div>
+      <div class="knowledge-breadcrumb" role="navigation" aria-label="面包屑导航">
+        {breadcrumb.map((item, index) => <>
+          {index > 0 && <span aria-hidden="true">/</span>}
+          {item.href ? <a href={item.href}>{item.title}</a> : <span aria-current="page">{item.title}</span>}
+        </>)}
+      </div>
       <article class="blog-post knowledge-article">
         <p class="post-eyebrow">UE {article.data.engineVersion} · 中文学习导读</p>
         <h1>{article.data.title}</h1>
