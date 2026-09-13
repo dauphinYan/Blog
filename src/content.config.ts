@@ -12,4 +12,19 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { blog };
+const unrealCpp = defineCollection({
+  loader: glob({ base: './src/content/unreal-engine/5.8/programming-with-cplusplus', pattern: '**/*.md' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    sourceTitle: z.string(),
+    sourceUrl: z.string().url(),
+    engineVersion: z.literal('5.8'),
+    reviewedAt: z.coerce.date(),
+    order: z.number(),
+    tags: z.array(z.string()).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { blog, unrealCpp };

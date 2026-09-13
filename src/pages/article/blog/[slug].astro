@@ -1,6 +1,6 @@
 ---
-import '../../styles/global.css';
-import '../../styles/blog.css';
+import '../../../styles/global.css';
+import '../../../styles/blog.css';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -32,17 +32,17 @@ const publishedDate = post.data.publishedAt.toLocaleDateString('zh-CN', {
     <title>{post.data.title} - Orca丶的博客</title>
   </head>
   <body class="page-with-paint-splashes">
-    <header><div class="nav-inner"><nav aria-label="主导航"><a href="/#home">首页</a><a href="/#projects">项目</a><a href="/#blog" class="active" aria-current="page">博客</a><a href="/#about">关于</a><a href="/#contact">联系</a></nav></div></header>
+    <header><div class="nav-inner"><nav aria-label="主导航"><a href="/#home">首页</a><a href="/#projects">项目</a><a href="/#articles" class="active" aria-current="page">文章</a><a href="/#about">关于</a><a href="/#contact">联系</a></nav></div></header>
     <aside class="article-toc" aria-label="文章目录" data-article-toc hidden>
       <p class="article-toc-label">ON THIS PAGE</p>
-      <button class="article-toc-toggle" type="button" aria-expanded="true" aria-controls="article-toc-list">目录 <span aria-hidden="true">−</span></button>
+      <button class="article-toc-toggle" type="button" aria-expanded="true" aria-controls="article-toc-list">大纲 <span aria-hidden="true">−</span></button>
       <nav id="article-toc-list" aria-label="文章章节"></nav>
     </aside>
     <div class="article-decor article-decor-left" aria-hidden="true"><span>+</span><i></i><b>001</b></div>
     <div class="article-decor article-decor-right" aria-hidden="true"><span>PLAY</span><i></i><b>///</b></div>
     <main class="blog-page">
       <article class="blog-post">
-        <a class="back-link" href="/#blog">← 返回博客列表</a>
+        <a class="back-link" href="/#articles">← 返回文章列表</a>
         <p class="post-eyebrow">{post.data.tags[0] ?? 'DEVLOG'} / {publishedDate}</p>
         <h1>{post.data.title}</h1>
         <p class="post-description">{post.data.description}</p>

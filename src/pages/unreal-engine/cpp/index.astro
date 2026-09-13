@@ -1,0 +1,75 @@
+---
+import '../../../styles/global.css';
+import '../../../styles/knowledge-base.css';
+import { getCollection } from 'astro:content';
+import KnowledgeTree from '../../../components/KnowledgeTree.astro';
+import { articleUrlSlug, buildKnowledgeTree, knowledgeUrl } from '../../../data/unreal-cpp';
+import { initKnowledgeTree } from '../../../scripts/knowledge-tree';
+
+const articles = (await getCollection('unrealCpp', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order);
+const navigationTree = buildKnowledgeTree(await getCollection('unrealCpp'));
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Unreal Engine 5.8 C++ 官方文档中文导读专区。" />
+    <meta name="theme-color" content="#f7f6f0" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171a16" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>虚幻引擎官方文档 · 中文专区 - Orca丶</title>
+  </head>
+  <body class="page-with-paint-splashes">
+    <header><div class="nav-inner"><nav aria-label="主导航"><a href="/#home">首页</a><a href="/#projects">项目</a><a href="/#articles" class="active" aria-current="page">文章</a><a href="/#about">关于</a><a href="/#contact">联系</a></nav></div></header>
+    <main class="knowledge-page">
+      <a class="back-link" href="/#articles">← 返回文章列表</a>
+      <section class="knowledge-hero">
+        <p class="knowledge-eyebrow">UNREAL ENGINE 5.8 / OFFICIAL DOCS GUIDE</p>
+        <h1>虚幻引擎官方文档<br /><span>中文专区</span></h1>
+        <p>以官方文档目录为骨架，用中文导读串起 Unreal Engine C++ 的关键概念。每篇均附原文、版本与核对日期。</p>
+      </section>
+      <section class="knowledge-layout" aria-label="C++ 编程知识库">
+        <aside class="knowledge-sidebar">
+          <div class="sidebar-head">
+            <p class="sidebar-label">UNREAL ENGINE DOCUMENTS</p>
+          </div>
+          <nav aria-label="C++ 编程专区目录"><KnowledgeTree nodes={navigationTree} currentSlug="" /></nav>
+        </aside>
+        <div class="knowledge-content">
+          <label class="knowledge-search"><span class="sr-only">搜索专区内容</span><input type="search" placeholder="搜索标题、摘要或正文术语…" data-knowledge-search /></label>
+          <p class="knowledge-results" data-knowledge-results aria-live="polite">已收录 {articles.length} 篇导读</p>
+          <div class="knowledge-cards" data-knowledge-cards>
+            {articles.map(article => <article class="knowledge-card" data-knowledge-card data-search={`${article.data.title} ${article.data.description} ${article.body}`}>
+              <p>UE {article.data.engineVersion} · 已核对 {article.data.reviewedAt.toLocaleDateString('zh-CN')}</p>
+              <h2><a href={knowledgeUrl(articleUrlSlug(article.id))}>{article.data.title}</a></h2>
+              <p class="knowledge-card-description">{article.data.description}</p>
+              <div><span>{article.data.tags.join(' · ')}</span><a href={knowledgeUrl(articleUrlSlug(article.id))}>阅读导读 ↗</a></div>
+            </article>)}
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="blog-footer"><span>内容为中文学习导读，官方文档版权归 Epic Games 所有。</span><span>© 2026 Orca丶</span></footer>
+    <script>
+      import { initKnowledgeTree } from '../../../scripts/knowledge-tree';
+      initKnowledgeTree();
+    </script>
+    <script>
+      const search = document.querySelector('[data-knowledge-search]');
+      const cards = [...document.querySelectorAll('[data-knowledge-card]')];
+      const result = document.querySelector('[data-knowledge-results]');
+      search?.addEventListener('input', () => {
+        const query = search instanceof HTMLInputElement ? search.value.trim().toLocaleLowerCase() : '';
+        let visible = 0;
+        cards.forEach(card => {
+          const matches = !query || (card.getAttribute('data-search') || '').toLocaleLowerCase().includes(query);
+          (card as HTMLElement).hidden = !matches;
+          if (matches) visible += 1;
+        });
+        if (result) result.textContent = query ? `找到 ${visible} 篇与“${query}”相关的导读` : `已收录 ${visible} 篇导读`;
+      });
+    </script>
+  </body>
+</html>
