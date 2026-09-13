@@ -56,7 +56,7 @@ const breadcrumb = knowledgeBreadcrumb(navigationTree, slug);
         <h1>{article.data.title}</h1>
         <p class="post-description">{article.data.description}</p>
         <dl class="source-meta">
-          <div><dt>官方原文</dt><dd><a href={article.data.sourceUrl} target="_blank" rel="noopener noreferrer">{article.data.sourceTitle} ↗</a></dd></div>
+          <div><dt>官方原文</dt><dd><a href={article.data.sourceUrl}>{article.data.sourceTitle} ↗</a></dd></div>
           <div><dt>版本</dt><dd>Unreal Engine {article.data.engineVersion}</dd></div>
           <div><dt>核对日期</dt><dd>{article.data.reviewedAt.toLocaleDateString('zh-CN')}</dd></div>
         </dl>
