@@ -3,6 +3,37 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:72px}
 body{min-height:100dvh;margin:0;display:flex;flex-direction:column;background:transparent;}
+/* Decorative paint is opt-in so focused reading and project pages stay clean. */
+.page-with-paint-splashes{
+background-image:
+radial-gradient(ellipse 17rem 4.7rem at 1% 16%,#ff006d1c 0 22%,#ff006d10 23% 40%,transparent 41%),
+radial-gradient(ellipse 7rem 2.7rem at 6% 18%,#ff006d18 0 14%,transparent 15%),
+radial-gradient(ellipse 3.4rem 1.1rem at 12% 21%,#ff006d1a 0 24%,transparent 25%),
+radial-gradient(circle 1.1rem at 18% 15%,#ff006d22 0 36%,transparent 38%),
+radial-gradient(circle .45rem at 21% 18%,#ff006d26 0 42%,transparent 44%),
+radial-gradient(ellipse 8rem 1.15rem at 2% 42%,#ff006d16 0 20%,transparent 22%),
+radial-gradient(ellipse 3.2rem .8rem at 9% 45%,#ff006d1d 0 24%,transparent 26%),
+radial-gradient(circle .62rem at 15% 41%,#ff006d24 0 38%,transparent 41%),
+radial-gradient(circle .28rem at 17% 44%,#ff006d2b 0 42%,transparent 45%),
+radial-gradient(ellipse 10rem 2.4rem at 4% 86%,#b5ff1617 0 18%,transparent 36%),
+radial-gradient(ellipse 3.6rem .9rem at 14% 82%,#b5ff161e 0 20%,transparent 23%),
+radial-gradient(circle .78rem at 20% 85%,#b5ff1628 0 38%,transparent 41%),
+radial-gradient(circle .31rem at 23% 82%,#b5ff162b 0 42%,transparent 45%),
+radial-gradient(ellipse 7.5rem 1.5rem at 93% 13%,#b5ff1618 0 20%,transparent 34%),
+radial-gradient(ellipse 2.7rem .7rem at 84% 17%,#b5ff1622 0 25%,transparent 28%),
+radial-gradient(circle .72rem at 80% 14%,#b5ff1629 0 38%,transparent 41%),
+radial-gradient(circle .27rem at 77% 16%,#b5ff162c 0 42%,transparent 45%),
+radial-gradient(ellipse 15rem 5rem at 97% 65%,#b5ff1620 0 20%,#b5ff160d 21% 42%,transparent 43%),
+radial-gradient(ellipse 5.5rem 1.7rem at 89% 61%,#b5ff161c 0 20%,transparent 22%),
+radial-gradient(circle .9rem at 83% 66%,#b5ff1628 0 38%,transparent 40%),
+radial-gradient(circle .35rem at 80% 69%,#b5ff1628 0 42%,transparent 44%),
+radial-gradient(ellipse 9rem 1.5rem at 98% 89%,#ff006d16 0 20%,transparent 34%),
+radial-gradient(ellipse 3rem .75rem at 88% 85%,#ff006d20 0 22%,transparent 25%),
+radial-gradient(circle .68rem at 83% 89%,#ff006d29 0 38%,transparent 41%),
+radial-gradient(circle .26rem at 80% 86%,#ff006d2b 0 42%,transparent 45%);
+background-attachment:fixed;
+background-repeat:no-repeat;
+}
 a{color:inherit;text-decoration:none}
 button{font:inherit}
 a,button{-webkit-tap-highlight-color:transparent}
@@ -103,6 +134,7 @@ dialog h2{font-size:40px;margin:25px 0 10px}
 nav{position:static;margin-left:auto;transform:none}
 }
 @media(max-width:720px){header{height:68px}
+ .page-with-paint-splashes{background-image:radial-gradient(ellipse 11rem 3.8rem at -8% 14%,#ff006d18 0 27%,transparent 48%),radial-gradient(circle .8rem at 18% 17%,#ff006d24 0 36%,transparent 39%),radial-gradient(ellipse 6rem 1.3rem at -5% 49%,#ff006d18 0 25%,transparent 43%),radial-gradient(circle .46rem at 13% 53%,#ff006d29 0 38%,transparent 41%),radial-gradient(ellipse 7rem 2.8rem at 104% 31%,#b5ff161a 0 26%,transparent 46%),radial-gradient(circle .56rem at 82% 29%,#b5ff1628 0 38%,transparent 41%),radial-gradient(ellipse 10rem 3.8rem at 110% 69%,#b5ff161d 0 25%,transparent 46%),radial-gradient(circle .75rem at 79% 72%,#b5ff1626 0 38%,transparent 41%),radial-gradient(ellipse 7rem 1.5rem at 108% 91%,#ff006d18 0 25%,transparent 43%),radial-gradient(circle .48rem at 81% 88%,#ff006d29 0 38%,transparent 41%)}
  .contact{display:block;flex:0 0 auto;min-height:0;padding-bottom:25px}
 .nav-inner{padding:0 20px;justify-content:space-between;gap:20px}
 .logo{font-size:29px}

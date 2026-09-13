@@ -31,8 +31,8 @@ const publishedDate = post.data.publishedAt.toLocaleDateString('zh-CN', {
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{post.data.title} - Orca丶的博客</title>
   </head>
-  <body>
-    <header><div class="nav-inner"><nav aria-label="文章导航"><a href="/">首页</a></nav></div></header>
+  <body class="page-with-paint-splashes">
+    <header><div class="nav-inner"><nav aria-label="主导航"><a href="/#home">首页</a><a href="/#projects">项目</a><a href="/#blog" class="active" aria-current="page">博客</a><a href="/#about">关于</a><a href="/#contact">联系</a></nav></div></header>
     <aside class="article-toc" aria-label="文章目录" data-article-toc hidden>
       <p class="article-toc-label">ON THIS PAGE</p>
       <button class="article-toc-toggle" type="button" aria-expanded="true" aria-controls="article-toc-list">目录 <span aria-hidden="true">−</span></button>
@@ -70,6 +70,30 @@ const publishedDate = post.data.publishedAt.toLocaleDateString('zh-CN', {
       const toc = document.querySelector('[data-article-toc]');
       const tocList = document.querySelector('#article-toc-list');
       const headings = [...document.querySelectorAll('.article-body h2, .article-body h3, .article-body h4')];
+
+      const codeBlocks = [...document.querySelectorAll('.article-body pre.astro-code')];
+      codeBlocks.forEach((codeBlock, index) => {
+        if (!(codeBlock instanceof HTMLElement)) return;
+
+        const codeToggle = document.createElement('button');
+        const toggleId = `code-block-${index + 1}`;
+        codeBlock.id ||= toggleId;
+        codeToggle.type = 'button';
+        codeToggle.className = 'code-block-toggle';
+        codeToggle.setAttribute('aria-controls', codeBlock.id);
+        codeToggle.setAttribute('aria-expanded', 'true');
+        codeToggle.setAttribute('aria-label', '收起代码块');
+        codeToggle.title = '收起代码块';
+        codeToggle.textContent = '收起';
+        codeToggle.addEventListener('click', () => {
+          const collapsed = codeBlock.classList.toggle('is-collapsed');
+          codeToggle.setAttribute('aria-expanded', String(!collapsed));
+          codeToggle.setAttribute('aria-label', collapsed ? '展开代码块' : '收起代码块');
+          codeToggle.title = collapsed ? '展开代码块' : '收起代码块';
+          codeToggle.textContent = collapsed ? '展开' : '收起';
+        });
+        codeBlock.append(codeToggle);
+      });
 
       if (toc instanceof HTMLElement && tocList instanceof HTMLElement && headings.length > 0) {
         const usedIds = new Set();
