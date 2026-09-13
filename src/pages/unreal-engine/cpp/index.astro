@@ -33,7 +33,7 @@ const navigationTree = buildKnowledgeTree(await getCollection('unrealCpp'));
         <p>以官方文档目录为骨架，用中文导读串起 Unreal Engine C++ 的关键概念。每篇均附原文、版本与核对日期。</p>
       </section>
       <section class="knowledge-layout" aria-label="C++ 编程知识库">
-        <ArticleSidebar label="OFFICIAL DOCUMENTS" title="官方目录" ariaLabel="C++ 编程专区目录" kind="knowledge" placement="embedded">
+        <ArticleSidebar label="OFFICIAL DOCUMENTS" title="官方目录" ariaLabel="C++ 编程专区目录" kind="knowledge" placement="embedded" mobileDrawer>
           <nav id="knowledge-doc-nav" aria-label="C++ 编程专区目录"><KnowledgeTree nodes={navigationTree} currentSlug="" /></nav>
         </ArticleSidebar>
         <div class="knowledge-content">
@@ -52,7 +52,9 @@ const navigationTree = buildKnowledgeTree(await getCollection('unrealCpp'));
     </main>
     <footer class="blog-footer"><span>内容为中文学习导读，官方文档版权归 Epic Games 所有。</span><span>© 2026 Orca丶</span></footer>
     <script>
+      import { initArticleReader } from '../../../scripts/article-reader';
       import { initKnowledgeTree } from '../../../scripts/knowledge-tree';
+      initArticleReader();
       initKnowledgeTree();
     </script>
     <script>

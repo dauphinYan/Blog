@@ -92,8 +92,7 @@ export function initArticleReader() {
   };
   tocList.append(renderNodes(root.children));
   toc.hidden = false;
-  const tocToggle = document.querySelector<HTMLButtonElement>('[data-article-sidebar-toggle="outline"]');
-  if (tocToggle) tocToggle.hidden = false;
+  initArticleSidebarToggle(toc);
 
   const links = [...toc.querySelectorAll<HTMLAnchorElement>('[data-toc-target]')];
   const branchItems = [...toc.querySelectorAll<HTMLLIElement>('li:has(> .article-toc-branch)')];
@@ -124,9 +123,53 @@ export function initArticleReader() {
 /** Adds the shared mobile drawer behavior to every article navigation sidebar. */
 function initArticleSidebarToggles() {
   document.querySelectorAll<HTMLElement>('[data-article-sidebar]').forEach(sidebar => {
+    if (sidebar.dataset.mobileHref) {
+      addArticleMobileLink(sidebar);
+      return;
+    }
+    if (!sidebar.hidden) initArticleSidebarToggle(sidebar);
+  });
+}
+
+function getArticleMobileActions() {
+  let actions = document.querySelector<HTMLElement>('[data-article-mobile-actions]');
+  if (!actions) {
+    actions = document.createElement('div');
+    actions.className = 'article-mobile-actions';
+    actions.dataset.articleMobileActions = '';
+    document.body.append(actions);
+  }
+  return actions;
+}
+
+function addArticleMobileLink(sidebar: HTMLElement) {
+  const kind = sidebar.dataset.articleSidebar;
+  const href = sidebar.dataset.mobileHref;
+  if (!kind || !href || document.querySelector(`[data-article-sidebar-link="${kind}"]`)) return;
+  const link = document.createElement('a');
+  link.className = 'article-sidebar-toggle';
+  link.href = href;
+  link.dataset.articleSidebarLink = kind;
+  link.innerHTML = '<span aria-hidden="true">☰</span>目录';
+  getArticleMobileActions().append(link);
+}
+
+function initArticleSidebarToggle(sidebar: HTMLElement) {
     const kind = sidebar.dataset.articleSidebar;
-    const toggle = document.querySelector<HTMLButtonElement>(`[data-article-sidebar-toggle="${kind}"]`);
-    if (!toggle || toggle.dataset.initialized) return;
+    if (!kind) return;
+    const actions = getArticleMobileActions();
+    let toggle = actions.querySelector<HTMLButtonElement>(`[data-article-sidebar-toggle="${kind}"]`);
+    if (!toggle) {
+      toggle = document.createElement('button');
+      toggle.className = 'article-sidebar-toggle';
+      toggle.type = 'button';
+      toggle.setAttribute('aria-controls', sidebar.id);
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.dataset.articleSidebarToggle = kind;
+      toggle.innerHTML = `<span aria-hidden="true">☰</span>${kind === 'knowledge' ? '目录' : '大纲'}`;
+      actions.append(toggle);
+    }
+    if (toggle.dataset.initialized) return;
     toggle.dataset.initialized = 'true';
 
     const close = () => {
@@ -138,7 +181,7 @@ function initArticleSidebarToggles() {
         if (otherSidebar === sidebar) return;
         otherSidebar.classList.remove('is-mobile-open');
         const otherKind = otherSidebar.dataset.articleSidebar;
-        document.querySelector<HTMLButtonElement>(`[data-article-sidebar-toggle="${otherKind}"]`)?.setAttribute('aria-expanded', 'false');
+        actions.querySelector<HTMLButtonElement>(`[data-article-sidebar-toggle="${otherKind}"]`)?.setAttribute('aria-expanded', 'false');
       });
       const isOpen = sidebar.classList.toggle('is-mobile-open');
       toggle.setAttribute('aria-expanded', String(isOpen));
@@ -152,7 +195,6 @@ function initArticleSidebarToggles() {
     document.addEventListener('click', event => {
       if (!sidebar.classList.contains('is-mobile-open')) return;
       const target = event.target;
-      if (target instanceof Node && !sidebar.contains(target) && !toggle.contains(target)) close();
+      if (target instanceof Node && !sidebar.contains(target) && !actions.contains(target)) close();
     });
-  });
 }
