@@ -1,10 +1,11 @@
 ---
 import '../../../../styles/global.css';
+import '../../../../styles/article-sidebar.css';
 import '../../../../styles/blog.css';
 import '../../../../styles/knowledge-base.css';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import KnowledgeTree from '../../../../components/KnowledgeTree.astro';
-import ArticleOutline from '../../../../components/ArticleOutline.astro';
+import ArticleSidebar from '../../../../components/ArticleSidebar.astro';
 import { articleUrlSlug, buildKnowledgeTree, knowledgeBasePath, knowledgeTreeOpenSlugs } from '../../../../data/unreal-cpp';
 import { initKnowledgeTree } from '../../../../scripts/knowledge-tree';
 
@@ -34,12 +35,12 @@ const openSlugs = knowledgeTreeOpenSlugs(navigationTree, slug);
   </head>
   <body class="page-with-paint-splashes">
     <header><div class="nav-inner"><nav aria-label="主导航"><a href="/#home">首页</a><a href="/#projects">项目</a><a href="/#articles" class="active" aria-current="page">文章</a><a href="/#about">关于</a><a href="/#contact">联系</a></nav></div></header>
-    <aside class="knowledge-document-tree" aria-label="官方文档目录">
-      <p class="article-toc-label">OFFICIAL DOCUMENTS</p>
-      <button class="knowledge-tree-toggle" type="button" data-knowledge-tree-toggle aria-expanded="true" aria-controls="knowledge-doc-nav">官方目录 <span aria-hidden="true">−</span></button>
+    <ArticleSidebar label="OFFICIAL DOCUMENTS" title="官方目录" ariaLabel="官方文档目录" kind="knowledge">
       <nav id="knowledge-doc-nav" aria-label="Programming with C++ 官方目录"><KnowledgeTree nodes={navigationTree} currentSlug={slug} openSlugs={openSlugs} /></nav>
-    </aside>
-    <ArticleOutline label="ARTICLE OUTLINE" ariaLabel="文章大纲" />
+    </ArticleSidebar>
+    <ArticleSidebar label="ARTICLE OUTLINE" title="大纲" ariaLabel="文章大纲" kind="outline" hidden>
+      <nav id="article-toc-list" data-article-toc-list aria-label="文章章节"></nav>
+    </ArticleSidebar>
     <div class="article-decor article-decor-left" aria-hidden="true"><span>+</span><i></i><b>UE5</b></div>
     <div class="article-decor article-decor-right" aria-hidden="true"><span>C++</span><i></i><b>///</b></div>
     <main class="blog-page knowledge-article-page">

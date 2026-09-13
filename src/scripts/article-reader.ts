@@ -27,7 +27,7 @@ export function initArticleReader() {
     block.append(button);
   });
 
-  const toc = document.querySelector<HTMLElement>('[data-article-toc]');
+  const toc = document.querySelector<HTMLElement>('[data-article-sidebar="outline"]');
   const tocList = toc?.querySelector<HTMLElement>('[data-article-toc-list]');
   const headings = [...document.querySelectorAll<HTMLElement>('.article-body h2, .article-body h3, .article-body h4')];
   if (!toc || !tocList || headings.length === 0) return;
@@ -90,14 +90,6 @@ export function initArticleReader() {
   };
   tocList.append(renderNodes(root.children));
   toc.hidden = false;
-
-  const toggle = toc.querySelector<HTMLButtonElement>('.article-toc-toggle');
-  toggle?.addEventListener('click', () => {
-    const collapsed = toc.classList.toggle('is-collapsed');
-    toggle.setAttribute('aria-expanded', String(!collapsed));
-    const icon = toggle.querySelector('span');
-    if (icon) icon.textContent = collapsed ? '+' : '−';
-  });
 
   const links = [...toc.querySelectorAll<HTMLAnchorElement>('[data-toc-target]')];
   const branchItems = [...toc.querySelectorAll<HTMLLIElement>('li:has(> .article-toc-branch)')];

@@ -1,0 +1,23 @@
+---
+interface Props {
+  label: string;
+  title: string;
+  ariaLabel: string;
+  /** 目录内容由页面或客户端脚本提供；类型仅用于挂接各自的交互。 */
+  kind: 'outline' | 'knowledge';
+  placement?: 'floating' | 'embedded';
+  hidden?: boolean;
+}
+
+const { label, title, ariaLabel, kind, placement = 'floating', hidden = false } = Astro.props;
+---
+<aside
+  class:list={['article-sidebar', `article-sidebar--${kind}`, `article-sidebar--${placement}`]}
+  aria-label={ariaLabel}
+  data-article-sidebar={kind}
+  hidden={hidden}
+>
+  <p class="article-sidebar-label">{label}</p>
+  <h2 class="article-sidebar-title">{title}</h2>
+  <slot />
+</aside>

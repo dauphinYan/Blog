@@ -17,15 +17,5 @@ export function initKnowledgeTree() {
       if (item) setBranchExpanded(item, item.classList.contains('is-collapsed'));
       return;
     }
-    const panelToggle = event.target.closest<HTMLButtonElement>('[data-knowledge-tree-toggle]');
-    if (panelToggle) {
-      const panel = panelToggle.closest<HTMLElement>('.knowledge-document-tree');
-      if (panel) {
-        const collapsed = panel.classList.toggle('is-collapsed');
-        panelToggle.setAttribute('aria-expanded', String(!collapsed));
-        const icon = panelToggle.querySelector('span');
-        if (icon) icon.textContent = collapsed ? '+' : '−';
-      }
-    }
   });
 }

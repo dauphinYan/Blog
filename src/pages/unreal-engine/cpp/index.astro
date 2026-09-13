@@ -1,8 +1,10 @@
 ---
 import '../../../styles/global.css';
+import '../../../styles/article-sidebar.css';
 import '../../../styles/knowledge-base.css';
 import { getCollection } from 'astro:content';
 import KnowledgeTree from '../../../components/KnowledgeTree.astro';
+import ArticleSidebar from '../../../components/ArticleSidebar.astro';
 import { articleUrlSlug, buildKnowledgeTree, knowledgeUrl } from '../../../data/unreal-cpp';
 import { initKnowledgeTree } from '../../../scripts/knowledge-tree';
 
@@ -31,12 +33,9 @@ const navigationTree = buildKnowledgeTree(await getCollection('unrealCpp'));
         <p>以官方文档目录为骨架，用中文导读串起 Unreal Engine C++ 的关键概念。每篇均附原文、版本与核对日期。</p>
       </section>
       <section class="knowledge-layout" aria-label="C++ 编程知识库">
-        <aside class="knowledge-sidebar">
-          <div class="sidebar-head">
-            <p class="sidebar-label">UNREAL ENGINE DOCUMENTS</p>
-          </div>
-          <nav aria-label="C++ 编程专区目录"><KnowledgeTree nodes={navigationTree} currentSlug="" /></nav>
-        </aside>
+        <ArticleSidebar label="OFFICIAL DOCUMENTS" title="官方目录" ariaLabel="C++ 编程专区目录" kind="knowledge" placement="embedded">
+          <nav id="knowledge-doc-nav" aria-label="C++ 编程专区目录"><KnowledgeTree nodes={navigationTree} currentSlug="" /></nav>
+        </ArticleSidebar>
         <div class="knowledge-content">
           <label class="knowledge-search"><span class="sr-only">搜索专区内容</span><input type="search" placeholder="搜索标题、摘要或正文术语…" data-knowledge-search /></label>
           <p class="knowledge-results" data-knowledge-results aria-live="polite">已收录 {articles.length} 篇导读</p>
