@@ -10,8 +10,10 @@ interface Props {
 }
 
 const { label, title, ariaLabel, kind, placement = 'floating', hidden = false } = Astro.props;
+const sidebarId = `article-sidebar-${kind}`;
 ---
 <aside
+  id={sidebarId}
   class:list={['article-sidebar', `article-sidebar--${kind}`, `article-sidebar--${placement}`]}
   aria-label={ariaLabel}
   data-article-sidebar={kind}
@@ -21,3 +23,13 @@ const { label, title, ariaLabel, kind, placement = 'floating', hidden = false } 
   <h2 class="article-sidebar-title">{title}</h2>
   <slot />
 </aside>
+<button
+  class="article-sidebar-toggle"
+  type="button"
+  aria-controls={sidebarId}
+  aria-expanded="false"
+  data-article-sidebar-toggle={kind}
+  hidden={hidden}
+>
+  <span aria-hidden="true">☰</span>{kind === 'outline' ? '大纲' : '目录'}
+</button>

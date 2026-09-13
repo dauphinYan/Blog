@@ -1,5 +1,7 @@
 /** Shared reader enhancements for long-form articles outside the legacy blog route. */
 export function initArticleReader() {
+  initArticleSidebarToggles();
+
   const backToTop = document.querySelector('[data-back-to-top]');
   if (backToTop instanceof HTMLButtonElement) {
     const update = () => { backToTop.hidden = window.scrollY < window.innerHeight; };
@@ -90,6 +92,8 @@ export function initArticleReader() {
   };
   tocList.append(renderNodes(root.children));
   toc.hidden = false;
+  const tocToggle = document.querySelector<HTMLButtonElement>('[data-article-sidebar-toggle="outline"]');
+  if (tocToggle) tocToggle.hidden = false;
 
   const links = [...toc.querySelectorAll<HTMLAnchorElement>('[data-toc-target]')];
   const branchItems = [...toc.querySelectorAll<HTMLLIElement>('li:has(> .article-toc-branch)')];
@@ -115,4 +119,40 @@ export function initArticleReader() {
     revealActivePath(active.target);
   }, { rootMargin: '-15% 0px -70%' });
   headings.forEach(heading => observer.observe(heading));
+}
+
+/** Adds the shared mobile drawer behavior to every article navigation sidebar. */
+function initArticleSidebarToggles() {
+  document.querySelectorAll<HTMLElement>('[data-article-sidebar]').forEach(sidebar => {
+    const kind = sidebar.dataset.articleSidebar;
+    const toggle = document.querySelector<HTMLButtonElement>(`[data-article-sidebar-toggle="${kind}"]`);
+    if (!toggle || toggle.dataset.initialized) return;
+    toggle.dataset.initialized = 'true';
+
+    const close = () => {
+      sidebar.classList.remove('is-mobile-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    };
+    toggle.addEventListener('click', () => {
+      document.querySelectorAll<HTMLElement>('[data-article-sidebar].is-mobile-open').forEach(otherSidebar => {
+        if (otherSidebar === sidebar) return;
+        otherSidebar.classList.remove('is-mobile-open');
+        const otherKind = otherSidebar.dataset.articleSidebar;
+        document.querySelector<HTMLButtonElement>(`[data-article-sidebar-toggle="${otherKind}"]`)?.setAttribute('aria-expanded', 'false');
+      });
+      const isOpen = sidebar.classList.toggle('is-mobile-open');
+      toggle.setAttribute('aria-expanded', String(isOpen));
+    });
+    sidebar.addEventListener('click', event => {
+      if (event.target instanceof HTMLAnchorElement) close();
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') close();
+    });
+    document.addEventListener('click', event => {
+      if (!sidebar.classList.contains('is-mobile-open')) return;
+      const target = event.target;
+      if (target instanceof Node && !sidebar.contains(target) && !toggle.contains(target)) close();
+    });
+  });
 }
