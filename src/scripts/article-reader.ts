@@ -32,7 +32,10 @@ export function initArticleReader() {
   const headings = [...document.querySelectorAll<HTMLElement>('.article-body h2, .article-body h3, .article-body h4')];
   if (!toc || !tocList || headings.length === 0) return;
 
+  type TocNode = { level: number; heading: HTMLElement; children: TocNode[] };
   const usedIds = new Set<string>();
+  const root: { level: number; children: TocNode[] } = { level: 1, children: [] };
+  const stack: Array<{ level: number; children: TocNode[] }> = [root];
   headings.forEach((heading, index) => {
     if (!heading.id) {
       const base = heading.textContent?.trim().toLowerCase().replace(/[^\w\u4e00-\u9fff]+/g, '-') || `section-${index + 1}`;
@@ -42,12 +45,6 @@ export function initArticleReader() {
       heading.id = id;
     }
     usedIds.add(heading.id);
-  });
-
-  type TocNode = { level: number; heading: HTMLElement; children: TocNode[] };
-  const root: { level: number; children: TocNode[] } = { level: 1, children: [] };
-  const stack: Array<{ level: number; children: TocNode[] }> = [root];
-  headings.forEach(heading => {
     const level = Number(heading.tagName.slice(1));
     while (stack.at(-1)!.level >= level) stack.pop();
     const node: TocNode = { level, heading, children: [] };
@@ -76,8 +73,13 @@ export function initArticleReader() {
         branch.type = 'button';
         branch.className = 'article-toc-branch';
         branch.setAttribute('aria-label', `展开或收起${node.heading.textContent}`);
-        branch.addEventListener('click', () => setBranchExpanded(item, item.classList.contains('is-collapsed')));
-        item.classList.add('is-collapsed');
+        branch.addEventListener('click', event => {
+          event.preventDefault();
+          event.stopPropagation();
+          const expanded = item.classList.contains('is-collapsed');
+          branch.dataset.manualState = expanded ? 'expanded' : 'collapsed';
+          setBranchExpanded(item, expanded);
+        });
         item.prepend(branch);
         item.append(renderNodes(node.children));
         setBranchExpanded(item, false);
@@ -98,10 +100,27 @@ export function initArticleReader() {
   });
 
   const links = [...toc.querySelectorAll<HTMLAnchorElement>('[data-toc-target]')];
+  const branchItems = [...toc.querySelectorAll<HTMLLIElement>('li:has(> .article-toc-branch)')];
+  const revealActivePath = (heading: Element) => {
+    const activeLink = links.find(link => link.dataset.tocTarget === heading.id);
+    const activePath = new Set<HTMLLIElement>();
+    let item = activeLink?.closest('li');
+    while (item instanceof HTMLLIElement) {
+      if (item.querySelector(':scope > .article-toc-branch')) activePath.add(item);
+      item = item.parentElement?.closest('li');
+    }
+    branchItems.forEach(branch => {
+      const button = branch.querySelector<HTMLButtonElement>(':scope > .article-toc-branch');
+      if (!button) return;
+      if (activePath.has(branch)) setBranchExpanded(branch, true);
+      else if (button.dataset.manualState !== 'expanded') setBranchExpanded(branch, false);
+    });
+  };
   const observer = new IntersectionObserver(entries => {
     const active = entries.filter(entry => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
     if (!active) return;
     links.forEach(link => link.classList.toggle('is-active', link.dataset.tocTarget === active.target.id));
+    revealActivePath(active.target);
   }, { rootMargin: '-15% 0px -70%' });
   headings.forEach(heading => observer.observe(heading));
 }

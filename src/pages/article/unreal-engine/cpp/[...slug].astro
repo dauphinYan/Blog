@@ -4,6 +4,7 @@ import '../../../../styles/blog.css';
 import '../../../../styles/knowledge-base.css';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import KnowledgeTree from '../../../../components/KnowledgeTree.astro';
+import ArticleOutline from '../../../../components/ArticleOutline.astro';
 import { articleUrlSlug, buildKnowledgeTree, knowledgeBasePath, knowledgeTreeOpenSlugs } from '../../../../data/unreal-cpp';
 import { initKnowledgeTree } from '../../../../scripts/knowledge-tree';
 
@@ -38,11 +39,7 @@ const openSlugs = knowledgeTreeOpenSlugs(navigationTree, slug);
       <button class="knowledge-tree-toggle" type="button" data-knowledge-tree-toggle aria-expanded="true" aria-controls="knowledge-doc-nav">官方目录 <span aria-hidden="true">−</span></button>
       <nav id="knowledge-doc-nav" aria-label="Programming with C++ 官方目录"><KnowledgeTree nodes={navigationTree} currentSlug={slug} openSlugs={openSlugs} /></nav>
     </aside>
-    <aside class="article-toc" aria-label="文章大纲" data-article-toc hidden>
-      <p class="article-toc-label">ARTICLE OUTLINE</p>
-      <button class="article-toc-toggle" type="button" aria-expanded="true" aria-controls="article-toc-list">大纲 <span aria-hidden="true">−</span></button>
-      <nav id="article-toc-list" data-article-toc-list aria-label="文章章节"></nav>
-    </aside>
+    <ArticleOutline label="ARTICLE OUTLINE" ariaLabel="文章大纲" />
     <div class="article-decor article-decor-left" aria-hidden="true"><span>+</span><i></i><b>UE5</b></div>
     <div class="article-decor article-decor-right" aria-hidden="true"><span>C++</span><i></i><b>///</b></div>
     <main class="blog-page knowledge-article-page">
