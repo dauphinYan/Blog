@@ -13,8 +13,12 @@ export function initArticleReader() {
   }
 
   document.querySelectorAll<HTMLElement>('.article-body pre.astro-code').forEach((block, index) => {
-    if (block.querySelector('.code-block-toggle')) return;
+    if (block.parentElement?.classList.contains('code-block-shell')) return;
     block.id ||= `code-block-${index + 1}`;
+    const shell = document.createElement('div');
+    shell.className = 'code-block-shell';
+    block.before(shell);
+    shell.append(block);
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'code-block-toggle';
@@ -26,7 +30,7 @@ export function initArticleReader() {
       button.setAttribute('aria-expanded', String(!collapsed));
       button.textContent = collapsed ? '展开' : '收起';
     });
-    block.append(button);
+    shell.append(button);
   });
 
   const toc = document.querySelector<HTMLElement>('[data-article-sidebar="outline"]');
