@@ -2,24 +2,6 @@
 
 使用 Astro 实现的响应式单页作品集，参考提供的涂鸦风格设计图。
 
-## 开发
-
-```sh
-npm install
-npm run dev
-```
-
-## 构建
-
-```sh
-npm run build
-npm run preview
-```
-
-## GitHub Pages 部署
-
-推送至 `master` 会触发 `.github/workflows/deploy-pages.yml`，自动构建 `dist/` 并发布到 GitHub Pages。当前站点使用自定义域名 `https://dolphindream.cn/`；`public/CNAME` 必须保留，避免部署时丢失域名绑定。
-
 ## 页面与内容
 
 - `/`：个人首页，展示项目、博客、简介与联系方式。
