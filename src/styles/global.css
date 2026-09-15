@@ -52,7 +52,7 @@ nav a:after{content:'';position:absolute;bottom:4px;left:0;right:0;height:4px;ba
 nav a.active,nav a:hover{color:var(--pink)}
 nav a.active:after,nav a:hover:after{transform:scaleX(1)}
 .hero{height:395px;position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
-.hero-art{position:absolute;right:0;top:0;width:61%;height:100%;background-image:url('/hero-art.webp');background-size:cover;background-position:center;mask-image:linear-gradient(105deg,transparent 0%,#000 17%)}
+.hero-art{position:absolute;right:0;top:0;width:61%;height:100%;background-image:url('../assets/home/hero-art.webp');background-size:cover;background-position:center;mask-image:linear-gradient(105deg,transparent 0%,#000 17%)}
 .hero-copy{position:relative;z-index:1;width:49%;padding:22px 0 0 6.3%;transform:rotate(-5deg)}
 h1{margin:0;line-height:1}
 .hello{display:block;font-size:clamp(30px,3.8vw,61px);font-weight:900;letter-spacing:3px;font-style:italic}
@@ -79,9 +79,9 @@ h1{margin:0;line-height:1}
 .project-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;flex:1}
 .project-card{position:relative;aspect-ratio:2.57;border:0;padding:0;border-radius:5px;overflow:hidden;cursor:pointer;background:var(--media);color:white;text-align:left;box-shadow:0 1px 3px var(--shadow)}
 .project-art{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .4s}
-.mist .project-art{background-image:url('/project-mist.webp')}
-.city .project-art{background-image:url('/project-city.webp')}
-.cat .project-art{background-image:url('/project-cat.webp')}
+.mist .project-art{background-image:url('../assets/home/project-mist.webp')}
+.city .project-art{background-image:url('../assets/home/project-city.webp')}
+.cat .project-art{background-image:url('../assets/home/project-cat.webp')}
 .project-bottom{position:absolute;inset:auto 0 0;display:flex;justify-content:space-between;align-items:center;padding:18px 20px 12px;background:linear-gradient(transparent,var(--media) 50%);font-weight:900;font-size:25px}
 .round-arrow{display:flex;align-items:center;justify-content:center;width:35px;height:35px;background:var(--paper);color:var(--ink);border-radius:50%;transition:background .2s,transform .2s}
 .round-arrow svg{width:24px;height:24px}

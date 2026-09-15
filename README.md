@@ -34,7 +34,7 @@ npm run preview
 
 素材位于 `src/assets/`，由 Astro 静态导入并构建到产物中。目录按用途分为 `projects/`、`icons/` 和 `profile/`；所有文件与目录名称使用小写短横线格式。按用户确认，剑的世界暂用“制作中”文字封面，`projects/conan/` 与 `projects/seer-plan/` 的素材尚未被页面引用。
 
-`public/reference.png` 保留为首页涂鸦装饰背景。字体使用 Google Fonts，并提供系统字体回退。项目没有提供下载或商店链接，因此页面仅提供已知的个人主页和邮件联系入口。
+`public/reference.png` 保留为待确认用途的参考图，当前页面未引用。字体使用 Google Fonts，并提供系统字体回退。项目没有提供下载或商店链接，因此页面仅提供已知的个人主页和邮件联系入口。
 
 ## 发布博客
 
