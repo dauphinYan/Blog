@@ -1,6 +1,6 @@
 ---
 title: "对象指针"
-description: "Object Pointers 的中文译文。"
+description: "Object Pointers 11的中文译文。"
 sourceTitle: "Object Pointers"
 sourceUrl: "https://dev.epicgames.com/documentation/unreal-engine/object-pointers-in-unreal-engine"
 engineVersion: "5.8"
