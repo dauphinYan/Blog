@@ -5,7 +5,7 @@ sourceTitle: "Core Redirects in Unreal Engine"
 sourceUrl: "https://dev.epicgames.com/documentation/unreal-engine/core-redirects-in-unreal-engine"
 engineVersion: "5.8"
 reviewedAt: 2026-09-14
-order: 3
+order: 5
 draft: false
 tags: [Unreal Engine, C++]
 ---

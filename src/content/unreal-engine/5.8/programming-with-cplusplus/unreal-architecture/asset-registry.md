@@ -5,7 +5,7 @@ sourceTitle: "Asset Registry in Unreal Engine"
 sourceUrl: "https://dev.epicgames.com/documentation/unreal-engine/asset-registry-in-unreal-engine"
 engineVersion: "5.8"
 reviewedAt: 2026-09-14
-order: 7
+order: 10
 draft: false
 tags: [Unreal Engine, C++]
 ---

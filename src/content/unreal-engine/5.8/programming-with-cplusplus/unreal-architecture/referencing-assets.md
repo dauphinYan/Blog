@@ -5,7 +5,7 @@ sourceTitle: "Referencing Assets in Unreal Engine"
 sourceUrl: "https://dev.epicgames.com/documentation/unreal-engine/referencing-assets-in-unreal-engine"
 engineVersion: "5.8"
 reviewedAt: 2026-09-14
-order: 6
+order: 9
 draft: false
 tags: [Unreal Engine, C++]
 ---

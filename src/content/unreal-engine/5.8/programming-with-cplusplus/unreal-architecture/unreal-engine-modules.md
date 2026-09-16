@@ -5,7 +5,7 @@ sourceTitle: "Unreal Engine Modules"
 sourceUrl: "https://dev.epicgames.com/documentation/unreal-engine/unreal-engine-modules"
 engineVersion: "5.8"
 reviewedAt: 2026-09-14
-order: 5
+order: 8
 draft: false
 tags: [Unreal Engine, C++]
 ---
