@@ -1,0 +1,140 @@
+---
+import '../../styles/global.css';
+import '../../styles/article-index.css';
+import Icon from '../../components/Icon.astro';
+import { getCollection } from 'astro:content';
+
+const blogPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+const unrealCpp = await getCollection('unrealCpp', ({ data }) => !data.draft);
+const gameplaySystems = await getCollection('gameplaySystems', ({ data }) => !data.draft);
+const recommendedPosts = blogPosts.slice(0, 3);
+const unrealArticleCount = unrealCpp.length + gameplaySystems.length;
+const totalArticleCount = blogPosts.length + unrealArticleCount;
+const latestPublishedAt = blogPosts[0]?.data.publishedAt;
+
+const formatDate = (date: Date) => date.toLocaleDateString('zh-CN', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
+
+const postDescription = (description: string) =>
+  description || '一篇关于 Unreal Engine、C++ 与游戏开发实践的学习记录。';
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Orca丶的文章与技术专区：游戏开发记录、Unreal Engine、C++ 与创作思考。" />
+    <meta name="theme-color" content="#f7f6f0" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171a16" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>文章 - Orca丶</title>
+  </head>
+  <body class="page-with-paint-splashes">
+    <header>
+      <div class="nav-inner">
+        <nav aria-label="主导航">
+          <a href="/#home">首页</a>
+          <a href="/#projects">项目</a>
+          <a href="/article/" class="active" aria-current="page">文章</a>
+          <a href="/#about">关于</a>
+          <a href="/#contact">联系</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="article-index">
+      <section class="article-hero" aria-labelledby="article-page-title">
+        <div>
+          <p class="article-kicker">WRITING / NOTES / DEVELOPMENT</p>
+          <h1 id="article-page-title">文章<span>′</span></h1>
+          <p class="article-hero-copy">开发记录、技术整理，以及关于游戏创作的思考。</p>
+        </div>
+        <dl class="article-stats">
+          <div><dt>已收录</dt><dd>{totalArticleCount}<small>篇</small></dd></div>
+          <div><dt>最近更新</dt><dd class="article-stat-date">{latestPublishedAt ? formatDate(latestPublishedAt) : '持续整理中'}</dd></div>
+        </dl>
+        <span class="article-hero-mark" aria-hidden="true">ARTICLES ↗</span>
+      </section>
+
+      <section class="article-section" aria-labelledby="featured-sections-title">
+        <div class="article-section-heading">
+          <p>FEATURED SECTIONS</p>
+          <h2 id="featured-sections-title">专题专区</h2>
+        </div>
+        <a class="featured-section-card" href="/article/unreal-engine/">
+          <div class="featured-section-copy">
+            <p class="featured-section-label">UNREAL ENGINE 5.8 / OFFICIAL DOCS GUIDE</p>
+            <h3>虚幻引擎官方文档<br />中文专区</h3>
+            <p>以官方文档目录为骨架，用中文导读串起 C++ 编程与游戏性系统的关键概念。</p>
+          </div>
+          <div class="featured-section-meta">
+            <span>已收录 {unrealArticleCount} 篇导读</span>
+            <strong>进入专区 ↗</strong>
+          </div>
+          <span class="featured-section-stamp">专区</span>
+          <span class="featured-section-code" aria-hidden="true">UE<br />5.8</span>
+        </a>
+      </section>
+
+      <section class="article-section" aria-labelledby="recommended-title">
+        <div class="article-section-heading">
+          <p>RECOMMENDED</p>
+          <h2 id="recommended-title">推荐阅读</h2>
+        </div>
+        {recommendedPosts.length > 0 ? (
+          <div class:list={['recommended-grid', { 'recommended-grid--compact': recommendedPosts.length < 3 }]}>
+            {recommendedPosts.map((post, index) => (
+              <a class:list={['recommended-card', { 'recommended-card--lead': index === 0 }]} href={`/article/blog/${post.id}/`}>
+                <span class="recommended-number">{String(index + 1).padStart(2, '0')}</span>
+                <p class="article-card-label">{post.data.tags[0] ?? 'DEVLOG'}</p>
+                <h3>{post.data.title}</h3>
+                <p class="article-card-description">{postDescription(post.data.description)}</p>
+                <div class="article-card-meta">
+                  <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
+                  <span>阅读全文 ↗</span>
+                </div>
+                <span class="round-arrow" aria-hidden="true"><Icon name="arrow" /></span>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <p class="article-empty">推荐文章正在整理中。</p>
+        )}
+      </section>
+
+      <section class="article-section latest-section" aria-labelledby="latest-title">
+        <div class="article-section-heading">
+          <p>LATEST ARTICLES</p>
+          <h2 id="latest-title">全部文章</h2>
+        </div>
+        {blogPosts.length > 0 ? (
+          <div class="latest-grid">
+            {blogPosts.map(post => (
+              <a class="latest-card" href={`/article/blog/${post.id}/`}>
+                <p class="article-card-label">{post.data.tags.join(' / ') || 'DEVLOG'}</p>
+                <h3>{post.data.title}</h3>
+                <p class="article-card-description">{postDescription(post.data.description)}</p>
+                <div class="article-card-meta">
+                  <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
+                  <span>阅读全文 ↗</span>
+                </div>
+                <span class="round-arrow" aria-hidden="true"><Icon name="arrow" /></span>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <p class="article-empty">第一篇文章正在准备中。</p>
+        )}
+      </section>
+    </main>
+
+    <footer class="article-index-footer">
+      <a href="/#home">← 返回首页</a>
+      <span>© 2026 Orca丶</span>
+    </footer>
+  </body>
+</html>

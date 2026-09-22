@@ -29,6 +29,9 @@ body:has(.project-dialog[open]) { overflow: hidden; }
 .profile-bio p { font-size: 16px; }
 .contact-links { flex-wrap: wrap; gap: 25px 55px; padding-right: 0; }
 .blog { padding-top: 22px; padding-bottom: 22px; }
+.article-section-title { align-self: flex-start; margin-top: 22px; }
+.article-index-link { border: 1px solid var(--ink); display: inline-block; font-size: 12px; font-weight: 900; letter-spacing: .4px; margin: 28px 0 0 8px; padding: 9px 11px; transform: rotate(4deg); transition: background .2s, color .2s, transform .2s; }
+.article-index-link:hover { background: var(--pink); color: white; transform: rotate(0) translateY(-2px); }
 .blog-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; flex: 1; }
 .blog-card { min-height: 176px; border: 1px solid var(--line); box-shadow: 0 2px 4px var(--shadow); display: flex; flex-direction: column; padding: 19px 58px 18px 20px; position: relative; overflow: hidden; transition: background .2s, box-shadow .2s, transform .2s; }
 .blog-card::before { background: radial-gradient(var(--dot) 1px, transparent 1.5px) 0 0 / 6px 6px; content: ''; height: 70px; mask-image: linear-gradient(225deg, #000, transparent 70%); position: absolute; right: 0; top: 0; width: 90px; }
@@ -43,7 +46,8 @@ body:has(.project-dialog[open]) { overflow: hidden; }
 .blog-card:hover .round-arrow { background: var(--lime); transform: rotate(-35deg); }
 .blog-card-placeholder { background: color-mix(in srgb, var(--paper) 70%, transparent); }
 .blog-card-placeholder::after { border: 1px solid var(--pink); color: var(--pink); content: 'SOON'; font-size: 9px; font-weight: 900; letter-spacing: 1px; padding: 3px 5px; position: absolute; right: 14px; top: 14px; transform: rotate(4deg); }
-.knowledge-feature-card { background: linear-gradient(135deg, color-mix(in srgb, var(--lime) 22%, transparent), transparent 58%); }
+.knowledge-feature-card { background: linear-gradient(135deg, color-mix(in srgb, var(--pink) 22%, transparent), transparent 58%); }
+.knowledge-feature-card:hover { background: linear-gradient(135deg, color-mix(in srgb, var(--pink) 28%, transparent), transparent 62%); box-shadow: 4px 4px 0 var(--pink); }
 .knowledge-feature-card::after { background: var(--pink); color: white; content: '专区'; font-size: 10px; font-weight: 900; padding: 4px 7px; position: absolute; right: 14px; top: 14px; transform: rotate(4deg); }
 @media (max-width: 1100px) {
   .project-title { font-size: 18px; left: 10px; bottom: 9px; }
@@ -61,6 +65,8 @@ body:has(.project-dialog[open]) { overflow: hidden; }
   .contact-links { gap: 22px; }
   .blog-grid { grid-template-columns: 1fr; gap: 12px; }
   .blog-card { min-height: 160px; }
+  .article-section-title { margin-top: 0; }
+  .article-index-link { margin-top: 19px; }
 }
 
 
