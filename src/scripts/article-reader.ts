@@ -19,6 +19,12 @@ export function initArticleReader() {
     shell.className = 'code-block-shell';
     block.before(shell);
     shell.append(block);
+    const language = document.createElement('span');
+    language.className = 'code-block-language';
+    language.textContent = block.dataset.language && block.dataset.language !== 'plaintext'
+      ? block.dataset.language
+      : 'txt';
+    shell.append(language);
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'code-block-toggle';

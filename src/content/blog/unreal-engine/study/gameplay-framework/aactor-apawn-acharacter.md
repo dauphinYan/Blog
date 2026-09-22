@@ -219,7 +219,7 @@ Owner = Weapon / Character
 
 主要用于：伤害来源、权限关系、网络相关性、Gameplay 查询。
 
-# APawn
+## APawn
 
 头文件：
 
@@ -234,7 +234,7 @@ Pawn 是所有能够被玩家或 AI Possess 的 Actor 的基类。
 class APawn : public AActor, public INavAgentInterface
 ```
 
-## 1. Controller / Possession
+### 1. Controller / Possession
 
 核心关系：
 
@@ -263,7 +263,87 @@ ENGINE_API virtual void PossessedBy(AController* NewController);
 ENGINE_API virtual void UnPossessed();
 ```
 
-## 3. 玩家控制 / AI 控制身份
+### 控制对象切换过程
+
+切换主要由 `AController` 发起：
+
+```cpp
+/**
+* 负责将此控制器附加（附身）到指定的 Pawn 上。
+* 仅在网络权威端运行（即 HasAuthority() 返回 true 的情况下）。
+* 派生的原生类（C++类）可以重写 OnPossess 方法，以对指定的 Pawn 进行过滤或处理。
+* 当被附身的 Pawn 发生变更时，蓝图类会通过 ReceivePossess 收到通知，同时 OnNewPawn 委托（Delegate）也会被广播。
+* @param InPawn 将要被附身的 Pawn。
+* @see HasAuthority, OnPossess, ReceivePossess
+*/
+UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category=Pawn, meta=(Keywords="set controller"))
+ENGINE_API virtual void Possess(APawn* InPawn) final; // DEPRECATED(4.22, "Possess is marked virtual final as you should now be overriding OnPossess instead")
+```
+
+切换时会校验权威性，拓展点在 `OnPossess`，简单来说，代码逻辑如下：
+
+```cpp
+void AController::OnPossess(APawn* InPawn)
+{
+	InPawn->PossessedBy(this);
+	SetPawn(InPawn);
+
+	// update rotation to match possessed pawn's rotation
+	SetControlRotation(Pawn->GetActorRotation());
+
+    // 该方法用于处理Pawn的一些状态，例如停止当前移动、清除待处理移动输入、重新计算视点高度
+	Pawn->DispatchRestart(false);
+}
+```
+
+`APlayerController` 对该方法进行了重写，在原来的基础上增加了网络预测重置、相机管理:
+
+```cpp
+if (NetworkPredictionInterface)
+{
+    NetworkPredictionInterface->ResetPredictionData_Server();
+}
+
+if (bAutoManageActiveCameraTarget)
+{
+    AutoManageActiveCameraTarget(GetPawn());
+    ResetCameraMode();
+}
+```
+
+`AAIController` 增加了寻路初始化、GameplayTasks组件、黑板键的加载、Brain组件的启动：
+
+```cpp
+if (PathFollowingComponent)
+{
+    PathFollowingComponent->Initialize();
+}
+
+if (CachedGameplayTasksComponent == nullptr)
+{
+    UGameplayTasksComponent* GTComp = InPawn->FindComponentByClass<UGameplayTasksComponent>();
+    if (GTComp == nullptr)
+    {
+        GTComp = NewObject<UGameplayTasksComponent>(InPawn, TEXT("GameplayTasksComponent"));
+        GTComp->RegisterComponent();
+    }
+    CachedGameplayTasksComponent = GTComp;
+}
+
+if (Blackboard && Blackboard->GetBlackboardAsset())
+{
+    InitializeBlackboard(*Blackboard, *Blackboard->GetBlackboardAsset());
+}
+
+if (bStartAILogicOnPossess && BrainComponent)
+{
+    BrainComponent->StartLogic();
+}
+```
+
+
+
+### 3. 玩家控制 / AI 控制身份
 
 Pawn 会提供很多类似：
 
@@ -281,7 +361,7 @@ UFUNCTION(BlueprintPure, Category = Pawn)
 ENGINE_API virtual bool IsBotControlled() const;
 ```
 
-## 3. Input
+### 3. Input
 
 Pawn 开始和输入系统建立关系。
 
@@ -290,7 +370,7 @@ Pawn 开始和输入系统建立关系。
 virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) { /* No bindings by default.*/ }
 ```
 
-## 4. Movement 抽象
+### 4. Movement 抽象
 
 Pawn 开始出现：
 
@@ -306,7 +386,7 @@ ENGINE_API virtual UPawnMovementComponent* GetMovementComponent() const;
 >
 > `ACharacter` 构造时创建 `UCharacterMovementComponent`，并重写 getter，直接返回 `CharacterMovement`。
 
-## 5. Navigation Agent
+### 5. Navigation Agent
 
 源码声明里你会直接看到：
 
@@ -314,7 +394,7 @@ ENGINE_API virtual UPawnMovementComponent* GetMovementComponent() const;
 class APawn : public AActor, public INavAgentInterface
 ```
 
-## 6. View / Camera 基础接口
+### 6. View / Camera 基础接口
 
 相关的一些基础抽象，例如：
 
@@ -326,7 +406,7 @@ class APawn : public AActor, public INavAgentInterface
 ENGINE_API virtual FRotator GetViewRotation() const;
 ```
 
-# ACharacter
+## ACharacter
 
 头文件：
 
@@ -336,7 +416,7 @@ Engine/Source/Runtime/Engine/Classes/GameFramework/Character.h
 
 Character 是拥有 Mesh、Collision 和内置移动逻辑的 Pawn，主要面向直立角色，可以走、跳、飞、游泳。
 
-## 1. Capsule Collision
+### 1. Capsule Collision
 
 Character 默认建立`UCapsuleComponent`作为主要碰撞体。
 
@@ -352,7 +432,7 @@ ACharacter
 └── CharacterMovementComponent
 ```
 
-## 2.  Skeletal Mesh
+### 2.  Skeletal Mesh
 
 Character 自带：
 
@@ -362,11 +442,11 @@ USkeletalMeshComponent* Mesh;
 
 也就是说 UE 默认 Character ≈ 有动画骨骼的人形角色，而 Pawn 没有。
 
-## 3. CharacterMovementComponent
+### 3. CharacterMovementComponent
 
  `ACharacter` 持有 UCharacterMovementComponent。
 
-## 4. Jump
+### 4. Jump
 
 ```cpp
 /** 
@@ -420,7 +500,7 @@ int32 JumpCurrentCount;
 
 “跳跃”属于标准 Character 行为，而不是通用 Pawn 行为。
 
-## 5. Crouch
+### 5. Crouch
 
 类似地 Character / CharacterMovement 体系支持：
 
@@ -432,6 +512,6 @@ CanCrouch()
 
 以及 Capsule 高度变化、网络同步等。
 
-## 6. Root Motion
+### 6. Root Motion
 
 Character中也会处理一些Root Motion相关的内容。
