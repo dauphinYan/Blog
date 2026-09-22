@@ -8,7 +8,7 @@ tags:
 draft: false
 ---
 
-
+本文由AI与个人理解结合而成，若有错误还望指出~
 
 ## AActor
 
@@ -230,7 +230,6 @@ Engine/Source/Runtime/Engine/Classes/GameFramework/Pawn.h
 Pawn 是所有能够被玩家或 AI Possess 的 Actor 的基类。
 
 ```cpp
-
 class APawn : public AActor, public INavAgentInterface
 ```
 
@@ -385,6 +384,76 @@ ENGINE_API virtual UPawnMovementComponent* GetMovementComponent() const;
 > `APawn` 自身不会创建或保存一个默认的 `UPawnMovementComponent`；
 >
 > `ACharacter` 构造时创建 `UCharacterMovementComponent`，并重写 getter，直接返回 `CharacterMovement`。
+
+Pawn移动时，应当避免使用SetActorLocation，通常移动组件会处理输入消费、碰撞处理、移动模式、网络同步等等，因此借助`AddMovementInput` 由 MovementComponent 计算并执行最终移动。
+
+```cpp
+/**
+ * 沿给定的世界空间方向向量（通常为单位向量）添加移动输入，并按 'ScaleValue' 进行缩放。
+ * 如果 ScaleValue < 0，移动将沿相反方向进行。
+ *
+ * 基础的 Pawn 类不会自动应用移动，需要用户在 Tick 事件中自行处理。
+ * 而诸如 Character 和 DefaultPawn 等子类会自动处理该输入并移动。
+ *
+ * @param WorldDirection	要应用输入的世界空间方向
+ * @param ScaleValue		应用于输入的缩放值。可用于模拟量输入，例如 0.5 表示正常值的一半，-1.0 表示反向。
+ * @param bForce			如果为 true，则始终添加输入，忽略 IsMoveInputIgnored() 的返回结果。
+ * @see GetPendingMovementInputVector(), GetLastMovementInputVector(), ConsumeMovementInputVector()
+ */
+UFUNCTION(BlueprintCallable, Category="Pawn|Input", meta=(Keywords="AddInput"))
+ENGINE_API virtual void AddMovementInput(FVector WorldDirection, float ScaleValue = 1.0f, bool bForce = false);
+
+
+void APawn::AddMovementInput(FVector WorldDirection, float ScaleValue, bool bForce /*=false*/)
+{
+	UPawnMovementComponent* MovementComponent = GetMovementComponent();
+	if (MovementComponent)
+	{
+		MovementComponent->AddInputVector(WorldDirection * ScaleValue, bForce);
+	}
+	else
+	{
+		Internal_AddMovementInput(WorldDirection * ScaleValue, bForce);
+	}
+}
+```
+
+每次有新的输入，都会将数据传递给`ControlInputVector`：
+
+```cpp
+void APawn::Internal_AddMovementInput(FVector WorldAccel, bool bForce /*=false*/)
+{
+	if (bForce || !IsMoveInputIgnored())
+	{
+		ControlInputVector += WorldAccel;
+	}
+}
+```
+
+在UCharacterMovementComponent::TickComponent中，会每帧消费`ControlInputVector` 的输入：
+
+```cpp
+FVector InputVector = FVector::ZeroVector;
+bool bUsingAsyncTick = (CharacterMovementCVars::AsyncCharacterMovement == 1) && IsAsyncCallbackRegistered();
+if (!bUsingAsyncTick)
+{
+    // Do not consume input if simulating asynchronously, we will consume input when filling out async inputs.
+    InputVector = ConsumeInputVector();
+}
+```
+
+对应就是：
+
+```cpp
+FVector APawn::Internal_ConsumeMovementInputVector()
+{
+	LastControlInputVector = ControlInputVector;
+	ControlInputVector = FVector::ZeroVector;
+	return LastControlInputVector;
+}
+```
+
+
 
 ### 5. Navigation Agent
 
