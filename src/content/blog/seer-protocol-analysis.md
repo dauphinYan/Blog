@@ -24,7 +24,7 @@ tags:
 | JPEXS Free Flash Decompiler | Flash文件反编译工具 |
 | x64dbg                      | 程序调试器          |
 
-项目开源地址：已屏蔽
+项目开源地址：https://github.com/dauphinYan/SeerAssistant
 
 ### 获取Flash文件并反编译
 

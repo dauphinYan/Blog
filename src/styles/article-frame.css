@@ -1,0 +1,9 @@
+.back-link { display: inline-block; font-weight: 900; margin-bottom: 44px; }
+.back-link:hover { color: var(--pink); }
+.blog-footer { border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 20px; padding: 24px 4%; color: var(--muted); font-size: 14px; }
+.blog-footer a { color: var(--ink); font-weight: 900; }
+@media (max-width: 720px) {
+  .back-link { margin-bottom: 34px; }
+  .blog-footer { display: block; }
+  .blog-footer span { display: block; margin-top: 6px; }
+}

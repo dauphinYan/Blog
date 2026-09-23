@@ -1,77 +1,19 @@
 ---
-import '../../../../styles/global.css';
-import '../../../../styles/article-sidebar.css';
-import '../../../../styles/blog.css';
-import '../../../../styles/knowledge-base.css';
-import { getCollection, render, type CollectionEntry } from 'astro:content';
-import KnowledgeTree from '../../../../components/KnowledgeTree.astro';
-import ArticleSidebar from '../../../../components/ArticleSidebar.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import OfficialDocArticle from '../../../../components/OfficialDocArticle.astro';
 import { articleUrlSlug, knowledgeBreadcrumb } from '../../../../data/unreal-cpp';
-import { buildUnrealDocsTree, unrealDocsHubPath } from '../../../../data/unreal-docs';
-import { knowledgeTreeOpenSlugs } from '../../../../data/knowledge-section';
-import { initKnowledgeTree } from '../../../../scripts/knowledge-tree';
+import { buildUnrealDocsTree } from '../../../../data/unreal-docs';
 
 interface Props { article: CollectionEntry<'unrealCpp'>; }
 
 export async function getStaticPaths() {
   const articles = await getCollection('unrealCpp', ({ data }) => !data.draft);
-  return articles.map(article => ({
-    params: { slug: articleUrlSlug(article.id) },
-    props: { article },
-  }));
+  return articles.map(article => ({ params: { slug: articleUrlSlug(article.id) }, props: { article } }));
 }
 
 const { article } = Astro.props;
-const { Content } = await render(article);
 const slug = articleUrlSlug(article.id);
-const navigationTree = buildUnrealDocsTree(await getCollection('unrealCpp'), await getCollection('gameplaySystems'));
-const openSlugs = knowledgeTreeOpenSlugs(navigationTree, slug);
-const breadcrumb = knowledgeBreadcrumb(navigationTree, slug);
+const tree = buildUnrealDocsTree(await getCollection('unrealCpp'), await getCollection('gameplaySystems'));
+const breadcrumb = knowledgeBreadcrumb(tree, slug);
 ---
-<!doctype html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={article.data.description} />
-    <meta name="theme-color" content="#f7f6f0" media="(prefers-color-scheme: light)" /><meta name="theme-color" content="#171a16" media="(prefers-color-scheme: dark)" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" /><title>{article.data.title} - UE C++ 中文专区</title>
-  </head>
-  <body class="page-with-paint-splashes">
-    <header><div class="nav-inner"><nav aria-label="主导航"><a href="/#home">首页</a><a href="/#projects">项目</a><a href="/article/" class="active" aria-current="page">文章</a><a href="/#about">关于</a><a href="/#contact">联系</a></nav></div></header>
-    <ArticleSidebar label="OFFICIAL DOCUMENTS" title="官方目录" ariaLabel="官方文档目录" kind="knowledge">
-      <nav id="knowledge-doc-nav" aria-label="虚幻引擎官方文档目录"><KnowledgeTree nodes={navigationTree} currentSlug={slug} openSlugs={openSlugs} urlFor={() => `${unrealDocsHubPath}/`} /></nav>
-    </ArticleSidebar>
-    <ArticleSidebar label="ARTICLE OUTLINE" title="大纲" ariaLabel="文章大纲" kind="outline" hidden>
-      <nav id="article-toc-list" data-article-toc-list aria-label="文章章节"></nav>
-    </ArticleSidebar>
-    <div class="article-decor article-decor-left" aria-hidden="true"><span>+</span><i></i><b>UE5</b></div>
-    <div class="article-decor article-decor-right" aria-hidden="true"><span>C++</span><i></i><b>///</b></div>
-    <main class="blog-page knowledge-article-page">
-      <div class="knowledge-breadcrumb" role="navigation" aria-label="面包屑导航">
-        {breadcrumb.map((item, index) => <>
-          {index > 0 && <span aria-hidden="true">/</span>}
-          {item.href ? <a href={item.href}>{item.title}</a> : <span aria-current="page">{item.title}</span>}
-        </>)}
-      </div>
-      <article class="blog-post knowledge-article">
-        <p class="post-eyebrow">UE {article.data.engineVersion} · 中文学习导读</p>
-        <h1>{article.data.title}</h1>
-        <p class="post-description">{article.data.description}</p>
-        <dl class="source-meta">
-          <div><dt>官方原文</dt><dd><a href={article.data.sourceUrl}>{article.data.sourceTitle} ↗</a></dd></div>
-          <div><dt>版本</dt><dd>Unreal Engine {article.data.engineVersion}</dd></div>
-          <div><dt>核对日期</dt><dd>{article.data.reviewedAt.toLocaleDateString('zh-CN')}</dd></div>
-        </dl>
-        <div class="article-body"><Content /></div>
-      </article>
-    </main>
-    <button class="back-to-top" type="button" aria-label="回到页面顶部" data-back-to-top hidden>TOP ↑</button>
-    <footer class="blog-footer"><span>内容为中文学习导读，官方文档版权归 Epic Games 所有。</span><span>© 2026 Orca丶</span></footer>
-    <script>
-      import { initArticleReader } from '../../../../scripts/article-reader';
-      import { initKnowledgeTree } from '../../../../scripts/knowledge-tree';
-      initArticleReader();
-      initKnowledgeTree();
-    </script>
-  </body>
-</html>
+<OfficialDocArticle article={article} slug={slug} navigationTree={tree} breadcrumb={breadcrumb} pageTitle={`${article.data.title} - UE C++ 中文专区`} decorRight="C++" />

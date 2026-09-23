@@ -200,7 +200,10 @@ function initArticleSidebarToggle(sidebar: HTMLElement) {
       if (event.target instanceof HTMLAnchorElement) close();
     });
     document.addEventListener('keydown', event => {
-      if (event.key === 'Escape') close();
+      if (event.key === 'Escape' && sidebar.classList.contains('is-mobile-open')) {
+        close();
+        toggle.focus();
+      }
     });
     document.addEventListener('click', event => {
       if (!sidebar.classList.contains('is-mobile-open')) return;

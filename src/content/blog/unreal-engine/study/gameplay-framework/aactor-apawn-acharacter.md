@@ -385,7 +385,9 @@ ENGINE_API virtual UPawnMovementComponent* GetMovementComponent() const;
 >
 > `ACharacter` 构造时创建 `UCharacterMovementComponent`，并重写 getter，直接返回 `CharacterMovement`。
 
-Pawn移动时，应当避免使用SetActorLocation，通常移动组件会处理输入消费、碰撞处理、移动模式、网络同步等等，因此借助`AddMovementInput` 由 MovementComponent 计算并执行最终移动。
+在传送、出生点设置、编辑器工具或一次性位置修正，可使用SetActorLocation调整位置，但若是Pawn持续移动时，应当避免使用SetActorLocation，通常移动组件会处理输入消费、碰撞处理、移动模式、网络同步等等。
+
+因此借助`AddMovementInput` 由 MovementComponent 计算并执行最终移动。
 
 ```cpp
 /**
@@ -418,7 +420,7 @@ void APawn::AddMovementInput(FVector WorldDirection, float ScaleValue, bool bFor
 }
 ```
 
-每次有新的输入，都会将数据传递给`ControlInputVector`：
+每次有新的输入，都会将数据传递给`APawn::ControlInputVector`：
 
 ```cpp
 void APawn::Internal_AddMovementInput(FVector WorldAccel, bool bForce /*=false*/)
@@ -430,7 +432,7 @@ void APawn::Internal_AddMovementInput(FVector WorldAccel, bool bForce /*=false*/
 }
 ```
 
-在UCharacterMovementComponent::TickComponent中，会每帧消费`ControlInputVector` 的输入：
+在UCharacterMovementComponent::TickComponent中，会每帧消费`ControlInputVector` 的输入（普通同步移动时）：
 
 ```cpp
 FVector InputVector = FVector::ZeroVector;
@@ -584,3 +586,21 @@ CanCrouch()
 ### 6. Root Motion
 
 Character中也会处理一些Root Motion相关的内容。
+
+## 小结
+
+Actor、Component、Pawn、Character 的职责差异，以及如何避免角色类膨胀。
+
+> Actor 是 World 中可放置、生成、销毁、可复制的实体，例如门、投射物；
+>
+> 
+>
+> Pawn 在 Actor 基础上增加了可被 Controller Possess 的语义，例如载具；
+>
+> 
+>
+> Character 是面向常规角色移动的 Pawn 实现，默认包含胶囊体、骨骼网格体、移动组件；
+>
+> 
+>
+> 组件通常伴随Owner存活，可按照职责划分组件，并挂载到角色身上，例如战斗组件、背包组件等等，这样可避免角色类膨胀；

@@ -1,0 +1,58 @@
+---
+import '../styles/global.css';
+import '../styles/article-sidebar.css';
+import '../styles/article-frame.css';
+import '../styles/article-detail.css';
+
+interface Props {
+  pageTitle: string;
+  title: string;
+  description: string;
+  eyebrow: string;
+  variant?: 'blog' | 'knowledge';
+  decorLeft?: string;
+  decorRight?: string;
+  footerNote: string;
+  footerCopyright: string;
+}
+
+const {
+  pageTitle, title, description, eyebrow, variant = 'blog',
+  decorLeft = '001', decorRight = 'PLAY', footerNote, footerCopyright,
+} = Astro.props;
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f7f6f0" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171a16" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{pageTitle}</title>
+  </head>
+  <body class="page-with-paint-splashes article-detail-page">
+    <header><div class="nav-inner"><nav aria-label="主导航"><a href="/#home">首页</a><a href="/#projects">项目</a><a href="/article/" class="active" aria-current="page">文章</a><a href="/#about">关于</a><a href="/#contact">联系</a></nav></div></header>
+    <slot name="leftSidebar" />
+    <slot name="rightSidebar" />
+    <div class="article-decor article-decor-left" aria-hidden="true"><span>+</span><i></i><b>{decorLeft}</b></div>
+    <div class="article-decor article-decor-right" aria-hidden="true"><span>{decorRight}</span><i></i><b>///</b></div>
+    <main class:list={['blog-page', { 'knowledge-article-page': variant === 'knowledge' }]}>
+      <slot name="preamble" />
+      <article class:list={['blog-post', { 'knowledge-article': variant === 'knowledge' }]}>
+        <p class="post-eyebrow">{eyebrow}</p>
+        <h1>{title}</h1>
+        <p class="post-description">{description}</p>
+        <slot name="metadata" />
+        <div class="article-body"><slot /></div>
+      </article>
+    </main>
+    <button class="back-to-top" type="button" aria-label="回到页面顶部" data-back-to-top hidden>TOP ↑</button>
+    <footer class="blog-footer"><span>{footerNote}</span><span>{footerCopyright}</span></footer>
+    <script>
+      import { initArticleReader } from '../scripts/article-reader';
+      initArticleReader();
+    </script>
+  </body>
+</html>
