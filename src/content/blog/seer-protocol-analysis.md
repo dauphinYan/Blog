@@ -30,7 +30,7 @@ tags:
 
 本阶段用到的工具：Fiddler Classic、JPEXS Free Flash Decompiler。
 
-因不可抗因素，这部分暂时跳过......（可自行在网络上搜索）
+因不可抗因素，这部分暂时跳过......（可参考文末链接）
 
 反编译成功后，我们会得到下述四个文件夹：
 
@@ -886,6 +886,8 @@ void PacketProcessor::Logining(PacketData &InPacketData)
 所有相关资源版权归**上海淘米网络科技有限公司**所有。
 
 如因滥用本文造成法律纠纷，**责任由使用者自行承担**。
+
+本文参考自赛尔号：[通信协议逆向与模拟&中间人攻击窃取登录凭证](https://www.52pojie.cn/thread-1468888-1-1.html)
 
 ---
 
