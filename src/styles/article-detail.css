@@ -9,7 +9,7 @@
 .article-decor-right span { color: var(--ink); font-size: 12px; letter-spacing: 3px; }
 .article-decor-right i { background: var(--lime); height: 13px; transform: skew(-18deg); width: 55px; }
 .post-eyebrow { color: var(--muted); font-family: 'Arial Black', Arial, sans-serif; font-size: 13px; font-style: italic; letter-spacing: 1.5px; margin: 0 0 12px; }
-.blog-post h1 { font-size: clamp(38px, 6.5vw, 70px); font-style: italic; font-weight: 900; letter-spacing: -3px; line-height: 1.1; margin: 0; }
+.blog-post h1 { font-size: clamp(28px, 4vw, 42px); font-style: italic; font-weight: 900; letter-spacing: -2px; line-height: 1.1; margin: 0; }
 .post-description { border-left: 8px solid var(--lime); font-size: 20px; line-height: 1.75; margin: 28px 0 20px; padding-left: 20px; }
 .post-tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
 .post-tags li { border: 1px solid var(--line); font-size: 12px; font-weight: 700; padding: 5px 9px; }
